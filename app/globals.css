@@ -1,26 +1,52 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-display: var(--font-playfair), serif;
+  --font-body: var(--font-urbanist), sans-serif;
+
+  --color-gold: #d4af37;
+  --color-gold-50: #fbf6e8;
+  --color-gold-100: #f3e6bd;
+  --color-gold-200: #e8d595;
+  --color-gold-300: #ddc36b;
+  --color-gold-400: #d4af37;
+  --color-gold-500: #b8932a;
+  --color-gold-600: #967621;
+  --color-gold-700: #75591a;
+  --color-gold-800: #543f12;
+  --color-gold-900: #33260b;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Select transparente usado dentro de la barra de búsqueda horizontal */
+.select-field {
+  width: 100%;
+  cursor: pointer;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #f1f5f9;
+  outline: none;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.select-field option {
+  color: #0f172a;
+}
+
+/* Textura de "plano arquitectónico": detalle de firma del diseño,
+   ahora usado detrás de la sección Doble Embudo. */
+.bg-blueprint {
+  background-image: linear-gradient(
+      rgba(212, 175, 55, 0.07) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(212, 175, 55, 0.07) 1px, transparent 1px);
+  background-size: 56px 56px;
 }
