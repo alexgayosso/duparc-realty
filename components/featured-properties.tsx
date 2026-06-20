@@ -1,29 +1,39 @@
-import ImagePlaceholder from "./image-placeholder";
+import Link from "next/link";
+import PropertyImage from "./property-image";
+import {
+  getFeaturedProperties,
+  getPropertyImage,
+  getPropertyLocationLabel,
+  getPropertyPrice,
+  getPropertySpecs,
+  SAMPLE_PROPERTIES,
+  type Property,
+} from "@/lib/easybroker";
 
 /**
- * Datos de muestra únicamente. En la Fase 2 (integración EasyBroker)
- * este arreglo se sustituye por un fetch real a la API y este componente
- * pasa a ser async para consumir ese servicio.
+ * Server Component asíncrono: hace el fetch a EasyBroker en el servidor
+ * (gracias al cache de Next.js con revalidate, no en cada visita).
+ *
+ * Si EASYBROKER_API_KEY no está configurada (o la API falla), cae
+ * automáticamente a SAMPLE_PROPERTIES sin romper el build ni la página.
  */
-const PLACEHOLDER_PROPERTIES = [
-  {
-    title: "Residencia frente al mar — Carretera Costera",
-    specs: "4 Hab · 5 Baños · 480 m²",
-    price: "Disponible bajo consulta",
-  },
-  {
-    title: "Nave industrial — Zona Industrial",
-    specs: "2,200 m² de nave · Patio de maniobras",
-    price: "Disponible bajo consulta",
-  },
-  {
-    title: "Penthouse — Isla del Carmen",
-    specs: "3 Hab · 3 Baños · 210 m²",
-    price: "Disponible bajo consulta",
-  },
-];
+export default async function FeaturedProperties() {
+  let properties: Property[];
+  let isLive = true;
 
-export default function FeaturedProperties() {
+  try {
+    properties = await getFeaturedProperties(6);
+  } catch (error) {
+    console.error(
+      "[FeaturedProperties] EasyBroker no disponible, usando datos de muestra:",
+      (error as Error).message
+    );
+    properties = SAMPLE_PROPERTIES;
+    isLive = false;
+  }
+
+  const hasResults = properties.length > 0;
+
   return (
     <section className="bg-stone-50 px-6 py-24">
       <div className="mx-auto max-w-6xl">
@@ -36,11 +46,22 @@ export default function FeaturedProperties() {
           </h2>
         </div>
 
+        {!hasResults && isLive && (
+          <p className="text-center font-body text-stone-500">
+            Estamos actualizando nuestro portafolio. Vuelve pronto.
+          </p>
+        )}
+
         <div className="grid gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-          {PLACEHOLDER_PROPERTIES.map((property) => (
-            <article key={property.title} className="group">
-              <ImagePlaceholder
-                label="Foto de propiedad — EasyBroker / reemplazar"
+          {properties.map((property) => (
+            <Link
+              key={property.public_id}
+              href={isLive ? `/propiedades/${property.public_id}` : "#"}
+              className="group block"
+            >
+              <PropertyImage
+                src={getPropertyImage(property)}
+                alt={property.title}
                 className="aspect-[4/5] w-full rounded-sm"
               />
               <div className="mt-6 space-y-2">
@@ -48,13 +69,14 @@ export default function FeaturedProperties() {
                   {property.title}
                 </h3>
                 <p className="font-body text-sm text-stone-500">
-                  {property.specs}
+                  {getPropertySpecs(property) ||
+                    getPropertyLocationLabel(property)}
                 </p>
                 <p className="font-body text-sm font-semibold uppercase tracking-[0.1em] text-accent-600">
-                  {property.price}
+                  {getPropertyPrice(property)}
                 </p>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>
