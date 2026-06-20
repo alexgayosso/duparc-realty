@@ -16,7 +16,7 @@ const ZONES = [
 
 export default function SearchBar() {
   return (
-    <form className="mx-auto flex w-full max-w-4xl flex-col gap-3 rounded-sm border border-white/10 bg-slate-950/70 p-3 backdrop-blur-md sm:flex-row sm:items-stretch sm:gap-0 sm:rounded-full sm:p-2">
+    <form className="flex w-full flex-col overflow-hidden rounded-sm border border-stone-300 bg-white sm:flex-row">
       <Segment label="Operación">
         <select className="select-field" defaultValue={OPERATIONS[0]}>
           {OPERATIONS.map((op) => (
@@ -25,7 +25,7 @@ export default function SearchBar() {
         </select>
       </Segment>
 
-      <Segment label="Tipo">
+      <Segment label="Tipo" border>
         <select className="select-field" defaultValue={PROPERTY_TYPES[0]}>
           {PROPERTY_TYPES.map((type) => (
             <option key={type}>{type}</option>
@@ -33,7 +33,7 @@ export default function SearchBar() {
         </select>
       </Segment>
 
-      <Segment label="Zona">
+      <Segment label="Zona" border>
         <select className="select-field" defaultValue={ZONES[0]}>
           {ZONES.map((zone) => (
             <option key={zone}>{zone}</option>
@@ -43,7 +43,7 @@ export default function SearchBar() {
 
       <button
         type="submit"
-        className="flex items-center justify-center gap-2 rounded-sm bg-gold px-7 py-3 font-body text-sm font-semibold uppercase tracking-[0.12em] text-slate-950 transition-colors hover:bg-gold-300 sm:rounded-full"
+        className="flex items-center justify-center gap-2 bg-accent-600 px-7 py-4 font-body text-sm font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-accent-700"
       >
         <Search size={17} strokeWidth={2.5} />
         Buscar
@@ -55,20 +55,26 @@ export default function SearchBar() {
 function Segment({
   label,
   children,
+  border = false,
 }: {
   label: string;
   children: React.ReactNode;
+  border?: boolean;
 }) {
   return (
-    <label className="relative flex flex-1 items-center gap-3 px-5 py-2.5 sm:border-r sm:border-white/10">
-      <span className="font-body text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+    <label
+      className={`relative flex flex-1 items-center gap-3 px-5 py-4 ${
+        border ? "sm:border-l sm:border-stone-200" : ""
+      }`}
+    >
+      <span className="font-body text-[10px] font-semibold uppercase tracking-[0.12em] text-stone-400">
         {label}
       </span>
       <div className="relative flex-1">
         {children}
         <ChevronDown
           size={14}
-          className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-slate-500"
+          className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-stone-400"
         />
       </div>
     </label>

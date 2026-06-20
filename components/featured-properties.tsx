@@ -25,13 +25,13 @@ const PLACEHOLDER_PROPERTIES = [
 
 export default function FeaturedProperties() {
   return (
-    <section className="bg-slate-950 px-6 py-24">
+    <section className="bg-stone-50 px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <div className="mb-14 flex flex-col items-center text-center">
-          <span className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.3em] text-gold">
+          <span className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.3em] text-accent-600">
             Portafolio Exclusivo
           </span>
-          <h2 className="font-display text-3xl text-slate-50 sm:text-4xl">
+          <h2 className="font-display text-3xl text-stone-900 sm:text-4xl">
             Propiedades Destacadas
           </h2>
         </div>
@@ -44,13 +44,13 @@ export default function FeaturedProperties() {
                 className="aspect-[4/5] w-full rounded-sm"
               />
               <div className="mt-6 space-y-2">
-                <h3 className="font-display text-lg leading-snug text-slate-50">
+                <h3 className="font-display text-lg leading-snug text-stone-900">
                   {property.title}
                 </h3>
-                <p className="font-body text-sm text-slate-400">
+                <p className="font-body text-sm text-stone-500">
                   {property.specs}
                 </p>
-                <p className="font-body text-sm font-semibold uppercase tracking-[0.1em] text-gold">
+                <p className="font-body text-sm font-semibold uppercase tracking-[0.1em] text-accent-600">
                   {property.price}
                 </p>
               </div>

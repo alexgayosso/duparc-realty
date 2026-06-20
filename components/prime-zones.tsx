@@ -21,16 +21,16 @@ const ZONES = [
 
 export default function PrimeZones() {
   return (
-    <section id="zonas-prime" className="bg-slate-900 px-6 py-24">
+    <section id="zonas-prime" className="bg-white px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <div className="mb-14 flex flex-col items-center text-center">
-          <span className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.3em] text-gold">
+          <span className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.3em] text-accent-600">
             Presencia Regional
           </span>
-          <h2 className="font-display text-3xl text-slate-50 sm:text-4xl">
+          <h2 className="font-display text-3xl text-stone-900 sm:text-4xl">
             Zonas Prime
           </h2>
-          <p className="mt-4 max-w-xl font-body text-sm text-slate-400">
+          <p className="mt-4 max-w-xl font-body text-sm text-stone-500">
             De Ciudad del Carmen a la Riviera Maya: cobertura en los mercados
             del sur-sureste mexicano donde el patrimonio industrial y
             residencial se encuentran.
@@ -47,12 +47,12 @@ export default function PrimeZones() {
                 label="Foto de zona — reemplazar"
                 className="aspect-[3/4] w-full"
               />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/15 to-transparent" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-stone-900/85 via-stone-900/20 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-5">
-                <p className="font-body text-[11px] font-semibold uppercase tracking-[0.14em] text-gold">
+                <p className="font-body text-[11px] font-semibold uppercase tracking-[0.14em] text-accent-200">
                   {zone.tag}
                 </p>
-                <h3 className="mt-1 font-display text-lg leading-snug text-slate-50">
+                <h3 className="mt-1 font-display text-lg leading-snug text-white">
                   {zone.name}
                 </h3>
               </div>

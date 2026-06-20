@@ -1,11 +1,7 @@
 import { ImageIcon } from "lucide-react";
 
 /**
- * Placeholder visual para fotografía real.
- * Úsalo en cualquier lugar donde más adelante vaya una imagen de verdad
- * (Hero, tarjetas de propiedad, tarjetas de zona). La etiqueta deja claro
- * en pantalla qué imagen falta, para que no se confunda con un diseño final.
- *
+ * Placeholder visual para fotografía real (versión fondo claro).
  * Para sustituir por una imagen real:
  *   <ImagePlaceholder className="..." />
  *   ↓
@@ -20,19 +16,19 @@ export default function ImagePlaceholder({
 }) {
   return (
     <div
-      className={`relative flex items-center justify-center overflow-hidden bg-slate-800 ${className}`}
+      className={`relative flex items-center justify-center overflow-hidden bg-stone-200 ${className}`}
     >
       <div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-70"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(45deg, rgba(212,175,55,0.10) 0px, rgba(212,175,55,0.10) 2px, transparent 2px, transparent 16px)",
+            "repeating-linear-gradient(45deg, rgba(122,31,44,0.06) 0px, rgba(122,31,44,0.06) 2px, transparent 2px, transparent 16px)",
         }}
       />
-      <div className="relative flex flex-col items-center gap-2 px-4 text-center text-slate-500">
+      <div className="relative flex flex-col items-center gap-2 px-4 text-center text-stone-400">
         <ImageIcon size={26} strokeWidth={1.5} />
         {label && (
-          <span className="rounded-full border border-slate-600/60 bg-slate-900/70 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">
+          <span className="rounded-full border border-stone-300 bg-white/85 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-stone-500">
             {label}
           </span>
         )}

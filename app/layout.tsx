@@ -33,9 +33,9 @@ export default function RootLayout({
     <html
       lang="es"
       className={`${playfair.variable} ${urbanist.variable}`}
-      // Modo oscuro nativo: no depende de la clase "dark" de Tailwind.
+      // Modo claro: fondo cálido (stone) con acento granate.
     >
-      <body className="bg-slate-950 font-body text-slate-50 antialiased selection:bg-gold selection:text-slate-950">
+      <body className="bg-stone-50 font-body text-stone-900 antialiased selection:bg-accent-600 selection:text-white">
         {children}
       </body>
     </html>

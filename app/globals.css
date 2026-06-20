@@ -4,24 +4,25 @@
   --font-display: var(--font-playfair), serif;
   --font-body: var(--font-urbanist), sans-serif;
 
-  --color-gold: #d4af37;
-  --color-gold-50: #fbf6e8;
-  --color-gold-100: #f3e6bd;
-  --color-gold-200: #e8d595;
-  --color-gold-300: #ddc36b;
-  --color-gold-400: #d4af37;
-  --color-gold-500: #b8932a;
-  --color-gold-600: #967621;
-  --color-gold-700: #75591a;
-  --color-gold-800: #543f12;
-  --color-gold-900: #33260b;
+  /* Granate institucional — conecta con el granate del logotipo original */
+  --color-accent: #7a1f2c;
+  --color-accent-50: #fbf1f2;
+  --color-accent-100: #f4dbde;
+  --color-accent-200: #e7b7bd;
+  --color-accent-300: #d38d96;
+  --color-accent-400: #bd606c;
+  --color-accent-500: #9f3d49;
+  --color-accent-600: #7a1f2c;
+  --color-accent-700: #5e1620;
+  --color-accent-800: #441018;
+  --color-accent-900: #2c0a0f;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* Select transparente usado dentro de la barra de búsqueda horizontal */
+/* Select usado dentro de la barra de búsqueda (fondo claro) */
 .select-field {
   width: 100%;
   cursor: pointer;
@@ -32,21 +33,21 @@ html {
   font-family: var(--font-body);
   font-size: 0.9rem;
   font-weight: 500;
-  color: #f1f5f9;
+  color: #1c1917; /* stone-900 */
   outline: none;
 }
 
 .select-field option {
-  color: #0f172a;
+  color: #1c1917;
 }
 
 /* Textura de "plano arquitectónico": detalle de firma del diseño,
-   ahora usado detrás de la sección Doble Embudo. */
+   en granate muy sutil sobre fondo claro. */
 .bg-blueprint {
   background-image: linear-gradient(
-      rgba(212, 175, 55, 0.07) 1px,
+      rgba(122, 31, 44, 0.05) 1px,
       transparent 1px
     ),
-    linear-gradient(90deg, rgba(212, 175, 55, 0.07) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(122, 31, 44, 0.05) 1px, transparent 1px);
   background-size: 56px 56px;
 }

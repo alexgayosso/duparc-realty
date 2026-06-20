@@ -24,19 +24,19 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 border-b bg-stone-50/95 backdrop-blur-md transition-shadow duration-300 ${
         isScrolled
-          ? "border-b border-gold/15 bg-slate-950/90 shadow-[0_4px_24px_-8px_rgba(0,0,0,0.6)] backdrop-blur-md"
-          : "border-b border-transparent bg-transparent"
+          ? "border-stone-200 shadow-[0_2px_16px_-4px_rgba(28,25,23,0.08)]"
+          : "border-transparent"
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-        {/* Logo */}
-        <Link href="/" className="group flex items-baseline gap-2">
-          <span className="font-display text-xl tracking-[0.18em] text-slate-50 transition-colors group-hover:text-gold sm:text-2xl">
+        {/* Logo — conserva las letras del logotipo original (granate + gris) */}
+        <Link href="/" className="flex items-baseline gap-2">
+          <span className="font-display text-xl tracking-[0.1em] text-accent-700 sm:text-2xl">
             DUPARC
           </span>
-          <span className="font-body text-[10px] font-medium tracking-[0.35em] text-gold sm:text-xs">
+          <span className="font-body text-[10px] font-semibold tracking-[0.3em] text-stone-500 sm:text-xs">
             REALTY
           </span>
         </Link>
@@ -47,7 +47,7 @@ export default function Navbar() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="font-body text-sm font-medium uppercase tracking-[0.12em] text-slate-300 transition-colors hover:text-gold"
+                className="font-body text-sm font-medium uppercase tracking-[0.1em] text-stone-600 transition-colors hover:text-accent-600"
               >
                 {link.label}
               </Link>
@@ -57,7 +57,7 @@ export default function Navbar() {
 
         <Link
           href="/vende-tu-propiedad"
-          className="hidden rounded-sm border border-gold/60 px-5 py-2.5 font-body text-xs font-semibold uppercase tracking-[0.14em] text-gold transition-colors hover:bg-gold hover:text-slate-950 lg:inline-block"
+          className="hidden rounded-sm bg-accent-600 px-5 py-2.5 font-body text-xs font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-accent-700 lg:inline-block"
         >
           Valora tu Propiedad
         </Link>
@@ -66,7 +66,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setIsMenuOpen((open) => !open)}
-          className="text-slate-50 lg:hidden"
+          className="text-stone-900 lg:hidden"
           aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={isMenuOpen}
         >
@@ -76,14 +76,14 @@ export default function Navbar() {
 
       {/* Menú móvil */}
       {isMenuOpen && (
-        <div className="border-t border-slate-800 bg-slate-950 px-6 py-6 lg:hidden">
+        <div className="border-t border-stone-200 bg-stone-50 px-6 py-6 lg:hidden">
           <ul className="flex flex-col gap-5">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="font-body text-sm font-medium uppercase tracking-[0.12em] text-slate-300 hover:text-gold"
+                  className="font-body text-sm font-medium uppercase tracking-[0.1em] text-stone-600 hover:text-accent-600"
                 >
                   {link.label}
                 </Link>
@@ -93,7 +93,7 @@ export default function Navbar() {
               <Link
                 href="/vende-tu-propiedad"
                 onClick={() => setIsMenuOpen(false)}
-                className="mt-2 inline-block rounded-sm border border-gold/60 px-5 py-2.5 text-center font-body text-xs font-semibold uppercase tracking-[0.14em] text-gold"
+                className="mt-2 inline-block rounded-sm bg-accent-600 px-5 py-2.5 text-center font-body text-xs font-semibold uppercase tracking-[0.12em] text-white"
               >
                 Valora tu Propiedad
               </Link>

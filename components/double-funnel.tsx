@@ -3,10 +3,10 @@ import { Search, TrendingUp, type LucideIcon } from "lucide-react";
 
 export default function DoubleFunnel() {
   return (
-    <section className="relative overflow-hidden bg-slate-950 px-6 py-24">
-      <div className="bg-blueprint pointer-events-none absolute inset-0 opacity-50" />
+    <section className="relative overflow-hidden bg-stone-50 px-6 py-24">
+      <div className="bg-blueprint pointer-events-none absolute inset-0 opacity-70" />
 
-      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-sm border border-slate-800 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-slate-800">
+      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-sm border border-stone-200 bg-white sm:grid sm:grid-cols-2 sm:divide-x sm:divide-stone-200">
         <FunnelCard
           icon={Search}
           eyebrow="Compradores"
@@ -49,17 +49,17 @@ function FunnelCard({
   return (
     <div
       className={`flex flex-col gap-6 p-10 sm:p-14 ${
-        emphasized ? "bg-slate-900" : "bg-slate-900/50"
+        emphasized ? "bg-stone-50" : "bg-white"
       }`}
     >
-      <Icon size={28} className="text-gold" strokeWidth={1.5} />
-      <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+      <Icon size={28} className="text-accent-600" strokeWidth={1.5} />
+      <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-accent-600">
         {eyebrow}
       </span>
-      <h2 className="font-display text-2xl leading-tight text-slate-50 sm:text-3xl">
+      <h2 className="font-display text-2xl leading-tight text-stone-900 sm:text-3xl">
         {title}
       </h2>
-      <p className="font-body text-sm leading-relaxed text-slate-300 sm:text-base">
+      <p className="font-body text-sm leading-relaxed text-stone-600 sm:text-base">
         {description}
       </p>
 
@@ -67,8 +67,8 @@ function FunnelCard({
         href={ctaHref}
         className={
           emphasized
-            ? "mt-2 inline-flex w-fit items-center justify-center rounded-sm bg-gold px-7 py-3 font-body text-xs font-semibold uppercase tracking-[0.14em] text-slate-950 transition-colors hover:bg-gold-300"
-            : "mt-2 inline-flex w-fit items-center justify-center rounded-sm border border-gold/60 px-7 py-3 font-body text-xs font-semibold uppercase tracking-[0.14em] text-gold transition-colors hover:bg-gold hover:text-slate-950"
+            ? "mt-2 inline-flex w-fit items-center justify-center rounded-sm bg-accent-600 px-7 py-3 font-body text-xs font-semibold uppercase tracking-[0.14em] text-white transition-colors hover:bg-accent-700"
+            : "mt-2 inline-flex w-fit items-center justify-center rounded-sm border border-accent-600 px-7 py-3 font-body text-xs font-semibold uppercase tracking-[0.14em] text-accent-600 transition-colors hover:bg-accent-600 hover:text-white"
         }
       >
         {ctaLabel}
