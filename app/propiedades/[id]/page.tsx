@@ -1,70 +1,95 @@
-import { notFound } from "next/navigation";
-import PropertyImage from "@/components/property-image";
-import { getPropertyById } from "@/lib/easybroker";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import PropertyCard from "@/components/property-card";
+import { getAllProperties } from "@/lib/easybroker";
 
-export default async function PropertyDetailPage({
-  params,
+// Mismas 3 etiquetas que duparcrealty.easybroker.com.
+// Nota honesta: "Rentas Temporales" se agrupa con "rental" por ahora --
+// no hemos confirmado que EasyBroker distinga un tipo de operacion
+// separado para renta vacacional/temporal en los datos que hemos visto.
+// Si mas adelante notan que mezcla rentas largas con vacacionales,
+// hay que investigar un campo adicional (posiblemente una etiqueta o
+// el titulo) para separarlas.
+const OPERATION_MAP: Record<string, "sale" | "rental"> = {
+  "Propiedades en Venta": "sale",
+  "Propiedades en Renta": "rental",
+  "Rentas Temporales": "rental",
+};
+
+export const metadata = {
+  title: "Propiedades | Duparc Realty",
+};
+
+export default async function PropiedadesPage({
+  searchParams,
 }: {
-  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { id } = await params;
+  const params = await searchParams;
+  const operacion = typeof params.operacion === "string" ? params.operacion : undefined;
+  const tipo = typeof params.tipo === "string" ? params.tipo : undefined;
 
-  let property;
+  const operationType = operacion ? OPERATION_MAP[operacion] : undefined;
+
+  let properties: Awaited<ReturnType<typeof getAllProperties>>["content"] = [];
+  let errorMessage: string | null = null;
+
   try {
-    property = await getPropertyById(id);
+    const result = await getAllProperties({
+      limit: 24,
+      propertyTypes: tipo ? [tipo] : undefined,
+      operationTypes: operationType ? [operationType] : undefined,
+    });
+
+    properties = operationType
+      ? result.content.filter((p) =>
+          p.operations.some((op) => op.type === operationType)
+        )
+      : result.content;
   } catch (error) {
     console.error(
-      "[PropertyDetail] No se encontró la propiedad:",
+      "[Propiedades] Error consultando EasyBroker:",
       (error as Error).message
     );
-    notFound();
+    errorMessage =
+      "No pudimos cargar el inventario en este momento. Intenta de nuevo en unos minutos.";
   }
-
-  const operation = property.operations?.[0];
 
   return (
     <main className="bg-stone-50 px-6 pb-24 pt-32">
-      <div className="mx-auto max-w-4xl">
-        <PropertyImage
-          src={property.title_image_full ?? null}
-          alt={property.title}
-          className="aspect-[16/10] w-full rounded-sm"
-        />
+      <div className="mx-auto max-w-6xl">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 font-body text-xs font-semibold uppercase tracking-[0.12em] text-accent-600 hover:text-accent-700"
+        >
+          <ArrowLeft size={14} />
+          Nueva búsqueda
+        </Link>
 
-        <div className="mt-8">
-          <p className="font-body text-sm text-stone-500">{property.location}</p>
-          <h1 className="mt-2 font-display text-3xl text-stone-900 sm:text-4xl">
-            {property.title}
-          </h1>
+        <h1 className="mt-6 font-display text-3xl text-stone-900 sm:text-4xl">
+          Propiedades
+        </h1>
+        <p className="mt-3 font-body text-sm text-stone-500">
+          {errorMessage
+            ? "-"
+            : `${properties.length} resultado${properties.length === 1 ? "" : "s"}`}
+        </p>
 
-          <p className="mt-4 font-body text-2xl font-semibold text-accent-600">
-            {operation?.formatted_amount ?? "Disponible bajo consulta"}
-            {operation?.type === "rental" ? " / mes" : ""}
+        {errorMessage && (
+          <p className="mt-10 font-body text-stone-500">{errorMessage}</p>
+        )}
+
+        {!errorMessage && properties.length === 0 && (
+          <p className="mt-10 font-body text-stone-500">
+            No encontramos propiedades con esos filtros. Intenta con otra
+            combinación de búsqueda.
           </p>
+        )}
 
-          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 border-t border-stone-200 pt-6 font-body text-sm text-stone-600">
-            {property.bedrooms ? <span>{property.bedrooms} Habitaciones</span> : null}
-            {property.bathrooms ? <span>{property.bathrooms} Baños</span> : null}
-            {property.parking_spaces ? (
-              <span>{property.parking_spaces} Estacionamientos</span>
-            ) : null}
-            {property.construction_size ? (
-              <span>{property.construction_size} m² construcción</span>
-            ) : null}
-            {property.lot_size ? <span>{property.lot_size} m² terreno</span> : null}
-          </div>
-
-          {property.description && (
-            <p className="mt-8 whitespace-pre-line font-body text-base leading-relaxed text-stone-700">
-              {property.description}
-            </p>
-          )}
-
-          {property.agent && (
-            <p className="mt-8 font-body text-sm text-stone-500">
-              Atendido por {property.agent}
-            </p>
-          )}
+        <div className="mt-12 grid gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+          {properties.map((property) => (
+            <PropertyCard key={property.public_id} property={property} />
+          ))}
         </div>
       </div>
     </main>
