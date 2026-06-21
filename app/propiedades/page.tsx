@@ -1,9 +1,17 @@
 import PropertyCard from "@/components/property-card";
 import { getAllProperties } from "@/lib/easybroker";
 
+// Mismas 3 etiquetas que duparcrealty.easybroker.com.
+// Nota honesta: "Rentas Temporales" se agrupa con "rental" por ahora --
+// no hemos confirmado que EasyBroker distinga un tipo de operacion
+// separado para renta vacacional/temporal en los datos que hemos visto.
+// Si mas adelante notan que mezcla rentas largas con vacacionales,
+// hay que investigar un campo adicional (posiblemente una etiqueta o
+// el titulo) para separarlas.
 const OPERATION_MAP: Record<string, "sale" | "rental"> = {
-  Comprar: "sale",
-  Rentar: "rental",
+  "Propiedades en Venta": "sale",
+  "Propiedades en Renta": "rental",
+  "Rentas Temporales": "rental",
 };
 
 export const metadata = {
@@ -18,7 +26,6 @@ export default async function PropiedadesPage({
   const params = await searchParams;
   const operacion = typeof params.operacion === "string" ? params.operacion : undefined;
   const tipo = typeof params.tipo === "string" ? params.tipo : undefined;
-  const zona = typeof params.zona === "string" ? params.zona : undefined;
 
   const operationType = operacion ? OPERATION_MAP[operacion] : undefined;
 
@@ -30,13 +37,8 @@ export default async function PropiedadesPage({
       limit: 24,
       propertyTypes: tipo ? [tipo] : undefined,
       operationTypes: operationType ? [operationType] : undefined,
-      zone: zona,
     });
 
-    // Filtro de respaldo: por si "search[operation_types][]" no aplica
-    // del lado de EasyBroker (no confirmado en todos los planes), lo
-    // verificamos otra vez aquí para nunca mostrar, por ejemplo, rentas
-    // cuando se buscó específicamente "Comprar".
     properties = operationType
       ? result.content.filter((p) =>
           p.operations.some((op) => op.type === operationType)
@@ -59,10 +61,8 @@ export default async function PropiedadesPage({
         </h1>
         <p className="mt-3 font-body text-sm text-stone-500">
           {errorMessage
-            ? "—"
-            : `${properties.length} resultado${properties.length === 1 ? "" : "s"}${
-                zona ? ` en ${zona}` : ""
-              }`}
+            ? "-"
+            : `${properties.length} resultado${properties.length === 1 ? "" : "s"}`}
         </p>
 
         {errorMessage && (

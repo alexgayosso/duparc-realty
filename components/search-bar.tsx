@@ -1,6 +1,11 @@
-import { ChevronDown, MapPin, Search } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 
-const OPERATIONS = ["Comprar", "Rentar"];
+// Mismas 3 opciones, mismo texto, mismo orden que duparcrealty.easybroker.com
+const OPERATIONS = [
+  "Propiedades en Venta",
+  "Propiedades en Renta",
+  "Rentas Temporales",
+];
 
 // Lista EXACTA verificada contra duparcrealty.easybroker.com - no inventada.
 const PROPERTY_TYPES = [
@@ -25,6 +30,9 @@ const PROPERTY_TYPES = [
   "Villa",
 ];
 
+// Sin campo de Zona: el buscador real de EasyBroker tampoco lo tiene en
+// su barra principal (solo Operacion + Tipo + boton). La ubicacion vive
+// como un filtro aparte dentro de los resultados, no aqui.
 export default function SearchBar() {
   return (
     <form
@@ -32,7 +40,7 @@ export default function SearchBar() {
       method="get"
       className="flex w-full flex-col overflow-hidden rounded-sm border border-stone-300 bg-white sm:flex-row"
     >
-      <Segment label="Operación" icon="chevron">
+      <Segment label="Operación">
         <select name="operacion" className="select-field" defaultValue={OPERATIONS[0]}>
           {OPERATIONS.map((op) => (
             <option key={op}>{op}</option>
@@ -40,7 +48,7 @@ export default function SearchBar() {
         </select>
       </Segment>
 
-      <Segment label="Tipo" border icon="chevron">
+      <Segment label="Tipo" border>
         <select name="tipo" className="select-field" defaultValue="">
           <option value="">Tipo de propiedad</option>
           {PROPERTY_TYPES.map((type) => (
@@ -49,18 +57,6 @@ export default function SearchBar() {
             </option>
           ))}
         </select>
-      </Segment>
-
-      <Segment label="Zona" border icon="pin">
-        {/* Texto libre, no un dropdown: location en EasyBroker es una
-            cadena de texto plana, no una lista fija de zonas. */}
-        <input
-          type="text"
-          name="zona"
-          placeholder="Ej. Ciudad del Carmen"
-          className="select-field pr-5"
-          style={{ cursor: "text" }}
-        />
       </Segment>
 
       <button
@@ -78,12 +74,10 @@ function Segment({
   label,
   children,
   border = false,
-  icon,
 }: {
   label: string;
   children: React.ReactNode;
   border?: boolean;
-  icon: "chevron" | "pin";
 }) {
   return (
     <label
@@ -96,17 +90,10 @@ function Segment({
       </span>
       <div className="relative flex-1">
         {children}
-        {icon === "chevron" ? (
-          <ChevronDown
-            size={14}
-            className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-stone-400"
-          />
-        ) : (
-          <MapPin
-            size={14}
-            className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-stone-400"
-          />
-        )}
+        <ChevronDown
+          size={14}
+          className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-stone-400"
+        />
       </div>
     </label>
   );
