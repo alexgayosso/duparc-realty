@@ -41,6 +41,28 @@ html {
   color: #1c1917;
 }
 
+/* Campos del formulario de contacto */
+.form-input {
+  width: 100%;
+  border: 1px solid #d6d3d1; /* stone-300 */
+  border-radius: 2px;
+  background-color: #fafaf9; /* stone-50 */
+  padding: 0.65rem 0.85rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: #1c1917; /* stone-900 */
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.form-input::placeholder {
+  color: #a8a29e; /* stone-400 */
+}
+
+.form-input:focus {
+  border-color: #7a1f2c; /* accent-700 */
+}
+
 /* Textura de "plano arquitectónico": detalle de firma del diseño,
    en granate muy sutil sobre fondo claro. */
 .bg-blueprint {
