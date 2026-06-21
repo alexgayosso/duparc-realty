@@ -11,7 +11,7 @@ export default function DoubleFunnel() {
           icon={Search}
           eyebrow="Compradores"
           title="Encuentre su nuevo activo"
-          description="Un portafolio curado de propiedades industriales y residenciales en las ubicaciones más estratégicas de Ciudad del Carmen y la región."
+          description="Un portafolio curado de propiedades industriales y residenciales en las ubicaciones más estratégicas del sureste de México."
           ctaLabel="Explorar Propiedades"
           ctaHref="/propiedades"
         />
@@ -21,7 +21,7 @@ export default function DoubleFunnel() {
           title="¿Conoce el valor real de su propiedad?"
           description="Solicite un avalúo discreto y una estrategia de venta diseñada para proteger su privacidad y maximizar su retorno."
           ctaLabel="Vender con Duparc"
-          ctaHref="/vende-tu-propiedad"
+          ctaHref="/contacto?interes=Vender"
           emphasized
         />
       </div>

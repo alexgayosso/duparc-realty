@@ -9,29 +9,36 @@ export const metadata = {
   title: "Contacto | Duparc Realty",
 };
 
-export default function ContactoPage() {
+export default async function ContactoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+  const interes = typeof params.interes === "string" ? params.interes : undefined;
+  const isVender = interes === "Vender";
+
   return (
     <main className="bg-stone-50 px-6 pb-24 pt-32">
       <div className="mx-auto max-w-6xl">
         <div className="max-w-xl">
           <span className="mb-4 inline-flex items-center gap-3 font-body text-xs font-semibold uppercase tracking-[0.25em] text-accent-600">
             <span className="h-px w-7 bg-accent-300" />
-            Estamos para servirte
+            {isVender ? "Vende con Duparc" : "Estamos para servirte"}
           </span>
           <h1 className="font-display text-4xl text-stone-900 sm:text-5xl">
-            Contacto
+            {isVender ? "Valora tu Propiedad" : "Contacto"}
           </h1>
           <p className="mt-4 font-body text-base leading-relaxed text-stone-600">
-            Cuéntanos qué buscas y un asesor de Duparc Realty te atenderá
-            personalmente. También puedes escribirnos directo por WhatsApp.
+            {isVender
+              ? "¿Quieres vender o rentar tu propiedad? Déjanos tus datos y un asesor de Duparc Realty te contactará para valorarla y diseñar la mejor estrategia de venta."
+              : "Cuéntanos qué buscas y un asesor de Duparc Realty te atenderá personalmente. También puedes escribirnos directo por WhatsApp."}
           </p>
         </div>
 
         <div className="mt-14 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
-          {/* Formulario */}
-          <ContactForm />
+          <ContactForm defaultInterest={isVender ? "Vender" : "Comprar"} />
 
-          {/* Contacto directo */}
           <aside className="flex flex-col gap-4">
             <a
               href={`https://wa.me/${PHONE_DIGITS}`}

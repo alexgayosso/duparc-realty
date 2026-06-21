@@ -4,12 +4,16 @@ import { useState } from "react";
 import { Check, Loader2 } from "lucide-react";
 
 // ⬇️ REEMPLAZA esto con tu Form ID real de Formspree (los 8 caracteres
-// que te dan en https://formspree.io/f/mvzjpyar). Solo cambia esta linea.
-const FORMSPREE_ID = "mvzjpyar";
+// que te dan en https://formspree.io/f/XXXXXXXX). Solo cambia esta linea.
+const FORMSPREE_ID = "TU_FORM_ID_AQUI";
 
 const INTEREST_OPTIONS = ["Comprar", "Vender", "Rentar", "Otro"];
 
-export default function ContactForm() {
+export default function ContactForm({
+  defaultInterest = "Comprar",
+}: {
+  defaultInterest?: string;
+}) {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">(
     "idle"
   );
@@ -101,7 +105,7 @@ export default function ContactForm() {
         </Field>
 
         <Field label="¿Qué te interesa?" htmlFor="interes">
-          <select id="interes" name="interes" className="form-input" defaultValue="Comprar">
+          <select id="interes" name="interes" className="form-input" defaultValue={defaultInterest}>
             {INTEREST_OPTIONS.map((opt) => (
               <option key={opt}>{opt}</option>
             ))}

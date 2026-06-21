@@ -56,7 +56,7 @@ export default function Navbar() {
         </ul>
 
         <Link
-          href="/vende-tu-propiedad"
+          href="/contacto?interes=Vender"
           className="hidden rounded-sm bg-accent-600 px-5 py-2.5 font-body text-xs font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-accent-700 lg:inline-block"
         >
           Valora tu Propiedad
@@ -91,7 +91,7 @@ export default function Navbar() {
             ))}
             <li>
               <Link
-                href="/vende-tu-propiedad"
+                href="/contacto?interes=Vender"
                 onClick={() => setIsMenuOpen(false)}
                 className="mt-2 inline-block rounded-sm bg-accent-600 px-5 py-2.5 text-center font-body text-xs font-semibold uppercase tracking-[0.12em] text-white"
               >
