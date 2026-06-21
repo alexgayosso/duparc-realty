@@ -1,7 +1,9 @@
 import Link from "next/link";
 import PropertyImage from "./property-image";
+import { getFeaturedPropertyIds } from "@/lib/sanity/queries";
 import {
   getFeaturedProperties,
+  getPropertiesByIds,
   getPropertyImage,
   getPropertyLocationLabel,
   getPropertyPrice,
@@ -10,22 +12,20 @@ import {
   type Property,
 } from "@/lib/easybroker";
 
-/**
- * Server Component asíncrono: hace el fetch a EasyBroker en el servidor
- * (gracias al cache de Next.js con revalidate, no en cada visita).
- *
- * Si EASYBROKER_API_KEY no está configurada (o la API falla), cae
- * automáticamente a SAMPLE_PROPERTIES sin romper el build ni la página.
- */
 export default async function FeaturedProperties() {
   let properties: Property[];
   let isLive = true;
 
   try {
-    properties = await getFeaturedProperties(6);
+    const curatedIds = await getFeaturedPropertyIds();
+
+    properties =
+      curatedIds.length > 0
+        ? await getPropertiesByIds(curatedIds)
+        : await getFeaturedProperties(6);
   } catch (error) {
     console.error(
-      "[FeaturedProperties] EasyBroker no disponible, usando datos de muestra:",
+      "[FeaturedProperties] EasyBroker/Sanity no disponible, usando datos de muestra:",
       (error as Error).message
     );
     properties = SAMPLE_PROPERTIES;

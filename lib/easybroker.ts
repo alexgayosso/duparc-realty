@@ -313,3 +313,19 @@ export const SAMPLE_PROPERTIES: Property[] = [
     operations: [],
   },
 ];
+
+export async function getPropertiesByIds(ids: string[]): Promise<Property[]> {
+  const results = await Promise.allSettled(ids.map((id) => getPropertyById(id)));
+
+  return results
+    .filter((result): result is PromiseFulfilledResult<Property> => {
+      if (result.status === "rejected") {
+        console.error(
+          "[easybroker] getPropertiesByIds - ID invalido u omitido:",
+          (result.reason as Error)?.message
+        );
+      }
+      return result.status === "fulfilled";
+    })
+    .map((result) => result.value);
+}

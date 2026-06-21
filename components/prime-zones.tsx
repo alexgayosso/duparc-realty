@@ -1,25 +1,51 @@
+﻿import { getPrimeZones, type PrimeZoneDoc } from "@/lib/sanity/queries";
 import ImagePlaceholder from "./image-placeholder";
 
-const ZONES = [
+const FALLBACK_ZONES: PrimeZoneDoc[] = [
   {
+    _id: "fallback-1",
     name: "Ciudad del Carmen",
-    tag: "Corazón Industrial y Corporativo",
+    tag: "Corazon Industrial y Corporativo",
+    order: 1,
+    imageUrl: null,
   },
   {
-    name: "Isla del Carmen · Zona Centro",
+    _id: "fallback-2",
+    name: "Isla del Carmen - Zona Centro",
     tag: "Vida Residencial Premium",
+    order: 2,
+    imageUrl: null,
   },
   {
-    name: "Carretera Costera · Playa Norte",
+    _id: "fallback-3",
+    name: "Carretera Costera - Playa Norte",
     tag: "Frente al Mar",
+    order: 3,
+    imageUrl: null,
   },
   {
+    _id: "fallback-4",
     name: "Riviera Maya, Quintana Roo",
-    tag: "Inversión y Destino Turístico",
+    tag: "Inversion y Destino Turistico",
+    order: 4,
+    imageUrl: null,
   },
 ];
 
-export default function PrimeZones() {
+export default async function PrimeZones() {
+  let zones: PrimeZoneDoc[];
+
+  try {
+    const liveZones = await getPrimeZones();
+    zones = liveZones.length > 0 ? liveZones : FALLBACK_ZONES;
+  } catch (error) {
+    console.error(
+      "[PrimeZones] Sanity no disponible, usando zonas de respaldo:",
+      (error as Error).message
+    );
+    zones = FALLBACK_ZONES;
+  }
+
   return (
     <section id="zonas-prime" className="bg-white px-6 py-24">
       <div className="mx-auto max-w-6xl">
@@ -38,15 +64,21 @@ export default function PrimeZones() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {ZONES.map((zone) => (
-            <div
-              key={zone.name}
-              className="relative overflow-hidden rounded-sm"
-            >
-              <ImagePlaceholder
-                label="Foto de zona — reemplazar"
-                className="aspect-[3/4] w-full"
-              />
+          {zones.map((zone) => (
+            <div key={zone._id} className="relative overflow-hidden rounded-sm">
+              {zone.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={zone.imageUrl}
+                  alt={zone.name}
+                  className="aspect-[3/4] w-full object-cover"
+                />
+              ) : (
+                <ImagePlaceholder
+                  label="Foto de zona - sube una en /studio"
+                  className="aspect-[3/4] w-full"
+                />
+              )}
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-stone-900/85 via-stone-900/20 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-5">
                 <p className="font-body text-[11px] font-semibold uppercase tracking-[0.14em] text-accent-200">
