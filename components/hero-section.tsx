@@ -5,8 +5,8 @@ export default function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-stone-50 pt-24 lg:pt-0">
       <div className="mx-auto grid max-w-[1700px] lg:grid-cols-[1fr_1.15fr]">
-        {/* Panel de texto y búsqueda */}
-        <div className="flex flex-col justify-center px-6 py-16 sm:px-12 lg:px-16 lg:py-0">
+        {/* Panel de texto */}
+        <div className="flex flex-col justify-center px-6 py-16 sm:px-12 lg:px-16 lg:py-20">
           <span className="mb-5 inline-flex items-center gap-3 font-body text-xs font-semibold uppercase tracking-[0.25em] text-accent-600">
             <span className="h-px w-7 bg-accent-300" />
             Ciudad del Carmen · Campeche
@@ -20,19 +20,20 @@ export default function HeroSection() {
             Conectando capital inteligente con las propiedades industriales y
             residenciales más exclusivas del sureste mexicano.
           </p>
-
-          <div className="mt-10">
-            <SearchBar />
-          </div>
         </div>
 
         {/* Panel fotográfico */}
-        <div className="relative min-h-[360px] lg:min-h-screen">
+        <div className="relative min-h-[320px] lg:min-h-[620px]">
           <ImagePlaceholder
             label="Foto de Ciudad del Carmen — reemplazar"
             className="absolute inset-0 h-full w-full"
           />
         </div>
+      </div>
+
+      {/* Buscador: ancho completo, fuera de la columna angosta de texto */}
+      <div className="mx-auto max-w-5xl px-6 pb-16 lg:px-16">
+        <SearchBar />
       </div>
     </section>
   );

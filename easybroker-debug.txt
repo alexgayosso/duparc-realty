@@ -1,0 +1,240 @@
+﻿=== TEST 1: Una propiedad completa, forma real ===
+{
+    "pagination":  {
+                       "limit":  1,
+                       "page":  1,
+                       "total":  2132,
+                       "next_page":  "https://api.easybroker.com/v1/properties?limit=1\u0026page=2"
+                   },
+    "content":  [
+                    {
+                        "public_id":  "EB-BB3579",
+                        "title":  "Renta: Casa en Residencial Azul con acceso a playa.",
+                        "title_image_full":  "https://assets.easybroker.com/property_images/543579/9671180/EB-BB3579.jpg?version=1516247657",
+                        "title_image_thumb":  "https://assets.easybroker.com/property_images/543579/9671180/EB-BB3579.jpg?version=1516247657\u0026width=200",
+                        "location":  "Club Residencial Azul, Carmen, Campeche",
+                        "operations":  [
+                                           {
+                                               "type":  "rental",
+                                               "amount":  35000.0,
+                                               "currency":  "MXN",
+                                               "formatted_amount":  "$35,000 MXN",
+                                               "commission":  {
+                                                                  "type":  "unspecified"
+                                                              },
+                                               "unit":  "total"
+                                           }
+                                       ],
+                        "bedrooms":  4,
+                        "bathrooms":  4,
+                        "parking_spaces":  4,
+                        "property_type":  "Casa en condominio",
+                        "lot_size":  300.0,
+                        "construction_size":  null,
+                        "updated_at":  "2026-03-20T17:09:27-06:00",
+                        "agent":  "ADRIAN GAYOSSO",
+                        "show_prices":  true,
+                        "share_commission":  true
+                    }
+                ]
+}
+
+=== TEST 2: Filtro tipo=Casa ===
+{
+    "pagination":  {
+                       "limit":  3,
+                       "page":  1,
+                       "total":  950,
+                       "next_page":  "https://api.easybroker.com/v1/properties?limit=3\u0026page=2\u0026search%5Bproperty_types%5D%5B%5D=Casa"
+                   },
+    "content":  [
+                    {
+                        "public_id":  "EB-BG2901",
+                        "title":  "Casa en Venta Fracc. Bivalbo, Ciudad del Carmen",
+                        "title_image_full":  "https://assets.easybroker.com/property_images/592901/17365274/EB-BG2901.JPG?version=1563822455",
+                        "title_image_thumb":  "https://assets.easybroker.com/property_images/592901/17365274/EB-BG2901.JPG?version=1563822455\u0026width=200",
+                        "location":  "Bivalbo, Carmen, Campeche",
+                        "operations":  [
+                                           {
+                                               "type":  "sale",
+                                               "amount":  4200000.0,
+                                               "currency":  "MXN",
+                                               "formatted_amount":  "$4,200,000 MXN",
+                                               "commission":  {
+                                                                  "type":  "unspecified"
+                                                              },
+                                               "unit":  "total"
+                                           }
+                                       ],
+                        "bedrooms":  3,
+                        "bathrooms":  2,
+                        "parking_spaces":  2,
+                        "property_type":  "Casa",
+                        "lot_size":  300.0,
+                        "construction_size":  302.0,
+                        "updated_at":  "2026-03-20T17:09:27-06:00",
+                        "agent":  "ADRIAN GAYOSSO",
+                        "show_prices":  true,
+                        "share_commission":  true
+                    },
+                    {
+                        "public_id":  "EB-BG2925",
+                        "title":  "Casa en Venta en Mediterraneo",
+                        "title_image_full":  "https://assets.easybroker.com/property_images/592925/9123245/EB-BG2925.JPG?version=1509822174",
+                        "title_image_thumb":  "https://assets.easybroker.com/property_images/592925/9123245/EB-BG2925.JPG?version=1509822174\u0026width=200",
+                        "location":  "Mediterráneo, Carmen, Campeche",
+                        "operations":  [
+                                           {
+                                               "type":  "sale",
+                                               "amount":  1200000.0,
+                                               "currency":  "MXN",
+                                               "formatted_amount":  "$1,200,000 MXN",
+                                               "commission":  {
+                                                                  "type":  "unspecified"
+                                                              },
+                                               "unit":  "total"
+                                           }
+                                       ],
+                        "bedrooms":  3,
+                        "bathrooms":  2,
+                        "parking_spaces":  null,
+                        "property_type":  "Casa",
+                        "lot_size":  97.5,
+                        "construction_size":  null,
+                        "updated_at":  "2026-03-20T17:09:27-06:00",
+                        "agent":  "ADRIAN GAYOSSO",
+                        "show_prices":  true,
+                        "share_commission":  true
+                    },
+                    {
+                        "public_id":  "EB-BG3305",
+                        "title":  "CASA EN RESIDENCIAL VILLA FLORENCIA",
+                        "title_image_full":  "https://assets.easybroker.com/property_images/593305/12551418/EB-BG3305.jpg?version=1537637881",
+                        "title_image_thumb":  "https://assets.easybroker.com/property_images/593305/12551418/EB-BG3305.jpg?version=1537637881\u0026width=200",
+                        "location":  "Villa Florencia, Carmen, Campeche",
+                        "operations":  [
+                                           {
+                                               "type":  "sale",
+                                               "amount":  2100000.0,
+                                               "currency":  "MXN",
+                                               "formatted_amount":  "$2,100,000 MXN",
+                                               "commission":  {
+                                                                  "type":  "unspecified"
+                                                              },
+                                               "unit":  "total"
+                                           }
+                                       ],
+                        "bedrooms":  3,
+                        "bathrooms":  3,
+                        "parking_spaces":  2,
+                        "property_type":  "Casa",
+                        "lot_size":  128.0,
+                        "construction_size":  null,
+                        "updated_at":  "2026-03-20T17:09:27-06:00",
+                        "agent":  "ADRIAN GAYOSSO",
+                        "show_prices":  true,
+                        "share_commission":  false
+                    }
+                ]
+}
+
+=== TEST 3: Filtro operacion=sale ===
+{
+    "pagination":  {
+                       "limit":  3,
+                       "page":  1,
+                       "total":  2132,
+                       "next_page":  "https://api.easybroker.com/v1/properties?limit=3\u0026page=2\u0026search%5Boperation_types%5D%5B%5D=sale"
+                   },
+    "content":  [
+                    {
+                        "public_id":  "EB-BB3579",
+                        "title":  "Renta: Casa en Residencial Azul con acceso a playa.",
+                        "title_image_full":  "https://assets.easybroker.com/property_images/543579/9671180/EB-BB3579.jpg?version=1516247657",
+                        "title_image_thumb":  "https://assets.easybroker.com/property_images/543579/9671180/EB-BB3579.jpg?version=1516247657\u0026width=200",
+                        "location":  "Club Residencial Azul, Carmen, Campeche",
+                        "operations":  [
+                                           {
+                                               "type":  "rental",
+                                               "amount":  35000.0,
+                                               "currency":  "MXN",
+                                               "formatted_amount":  "$35,000 MXN",
+                                               "commission":  {
+                                                                  "type":  "unspecified"
+                                                              },
+                                               "unit":  "total"
+                                           }
+                                       ],
+                        "bedrooms":  4,
+                        "bathrooms":  4,
+                        "parking_spaces":  4,
+                        "property_type":  "Casa en condominio",
+                        "lot_size":  300.0,
+                        "construction_size":  null,
+                        "updated_at":  "2026-03-20T17:09:27-06:00",
+                        "agent":  "ADRIAN GAYOSSO",
+                        "show_prices":  true,
+                        "share_commission":  true
+                    },
+                    {
+                        "public_id":  "EB-BG2889",
+                        "title":  "Casa de 4 Recámaras en Venta - Hacienda Dorada",
+                        "title_image_full":  "https://assets.easybroker.com/property_images/592889/9122786/EB-BG2889.JPG?version=1509817188",
+                        "title_image_thumb":  "https://assets.easybroker.com/property_images/592889/9122786/EB-BG2889.JPG?version=1509817188\u0026width=200",
+                        "location":  "Hacienda Dorada, Carmen, Campeche",
+                        "operations":  [
+                                           {
+                                               "type":  "sale",
+                                               "amount":  1650000.0,
+                                               "currency":  "MXN",
+                                               "formatted_amount":  "$1,650,000 MXN",
+                                               "commission":  {
+                                                                  "type":  "percentage",
+                                                                  "value":  "6.0"
+                                                              },
+                                               "unit":  "total"
+                                           }
+                                       ],
+                        "bedrooms":  4,
+                        "bathrooms":  4,
+                        "parking_spaces":  2,
+                        "property_type":  "Casa en condominio",
+                        "lot_size":  152.0,
+                        "construction_size":  null,
+                        "updated_at":  "2026-03-20T17:09:27-06:00",
+                        "agent":  "ADRIAN GAYOSSO",
+                        "show_prices":  true,
+                        "share_commission":  true
+                    },
+                    {
+                        "public_id":  "EB-BG2901",
+                        "title":  "Casa en Venta Fracc. Bivalbo, Ciudad del Carmen",
+                        "title_image_full":  "https://assets.easybroker.com/property_images/592901/17365274/EB-BG2901.JPG?version=1563822455",
+                        "title_image_thumb":  "https://assets.easybroker.com/property_images/592901/17365274/EB-BG2901.JPG?version=1563822455\u0026width=200",
+                        "location":  "Bivalbo, Carmen, Campeche",
+                        "operations":  [
+                                           {
+                                               "type":  "sale",
+                                               "amount":  4200000.0,
+                                               "currency":  "MXN",
+                                               "formatted_amount":  "$4,200,000 MXN",
+                                               "commission":  {
+                                                                  "type":  "unspecified"
+                                                              },
+                                               "unit":  "total"
+                                           }
+                                       ],
+                        "bedrooms":  3,
+                        "bathrooms":  2,
+                        "parking_spaces":  2,
+                        "property_type":  "Casa",
+                        "lot_size":  300.0,
+                        "construction_size":  302.0,
+                        "updated_at":  "2026-03-20T17:09:27-06:00",
+                        "agent":  "ADRIAN GAYOSSO",
+                        "show_prices":  true,
+                        "share_commission":  true
+                    }
+                ]
+}
+

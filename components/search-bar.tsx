@@ -2,22 +2,27 @@ import { ChevronDown, Search } from "lucide-react";
 
 const OPERATIONS = ["Comprar", "Rentar"];
 
-// Alineado a las categorías reales de tu cuenta de EasyBroker
-// (verificado contra duparcrealty.easybroker.com).
+// Lista EXACTA verificada contra duparcrealty.easybroker.com — no inventada.
 const PROPERTY_TYPES = [
-  "Casa",
-  "Departamento",
+  "Bodega comercial",
   "Bodega industrial",
-  "Nave industrial",
-  "Terreno",
+  "Casa",
+  "Casa con uso de suelo",
+  "Casa en condominio",
+  "Departamento",
+  "Edificio",
+  "Huerta",
   "Local comercial",
-];
-
-const ZONES = [
-  "Ciudad del Carmen",
-  "Isla del Carmen",
-  "Carretera Costera",
-  "Riviera Maya",
+  "Local en centro comercial",
+  "Nave industrial",
+  "Oficina",
+  "Otro",
+  "Quinta",
+  "Rancho",
+  "Terreno",
+  "Terreno comercial",
+  "Terreno industrial",
+  "Villa",
 ];
 
 export default function SearchBar() {
@@ -37,7 +42,7 @@ export default function SearchBar() {
 
       <Segment label="Tipo" border>
         <select name="tipo" className="select-field" defaultValue="">
-          <option value="">Todos</option>
+          <option value="">Tipo de propiedad</option>
           {PROPERTY_TYPES.map((type) => (
             <option key={type} value={type}>
               {type}
@@ -47,14 +52,15 @@ export default function SearchBar() {
       </Segment>
 
       <Segment label="Zona" border>
-        <select name="zona" className="select-field" defaultValue="">
-          <option value="">Todas</option>
-          {ZONES.map((zone) => (
-            <option key={zone} value={zone}>
-              {zone}
-            </option>
-          ))}
-        </select>
+        {/* Texto libre, no un dropdown fijo: evita inventar nombres de
+            zona que quiza no coincidan exacto con tus datos reales. */}
+        <input
+          type="text"
+          name="zona"
+          placeholder="Ej. Ciudad del Carmen"
+          className="select-field pr-5"
+          style={{ cursor: "text" }}
+        />
       </Segment>
 
       <button
