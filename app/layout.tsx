@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Urbanist } from "next/font/google";
+import Navbar from "@/components/navbar";
 import "./globals.css";
 
 // Tipografía de display: usada en títulos, cifras y el logotipo.
@@ -36,6 +37,7 @@ export default function RootLayout({
       // Modo claro: fondo cálido (stone) con acento granate.
     >
       <body className="bg-stone-50 font-body text-stone-900 antialiased selection:bg-accent-600 selection:text-white">
+        <Navbar />
         {children}
       </body>
     </html>

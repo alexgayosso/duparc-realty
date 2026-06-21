@@ -12,6 +12,16 @@ import {
   type Property,
 } from "@/lib/easybroker";
 
+/**
+ * Server Component asíncrono con 3 niveles de respaldo, de mejor a peor:
+ *
+ *  1. Lista curada a mano en /studio → "Propiedades Destacadas (Home)".
+ *     Esto es lo que se usa si Alex/su hermano ya eligieron IDs ahí.
+ *  2. Si esa lista está vacía (recién instalado, nadie la llenó todavía):
+ *     las propiedades más recientemente actualizadas en EasyBroker.
+ *  3. Si EasyBroker mismo falla (sin API Key, sin internet, etc.):
+ *     datos de muestra, para que el Home nunca se vea roto.
+ */
 export default async function FeaturedProperties() {
   let properties: Property[];
   let isLive = true;
@@ -56,7 +66,7 @@ export default async function FeaturedProperties() {
           {properties.map((property) => (
             <Link
               key={property.public_id}
-              href={isLive ? `/propiedades/${property.public_id}` : "#"}
+              href={isLive ? property.url ?? "#" : "#"}
               className="group block"
             >
               <PropertyImage

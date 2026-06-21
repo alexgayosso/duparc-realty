@@ -1,24 +1,34 @@
 import { ChevronDown, Search } from "lucide-react";
 
 const OPERATIONS = ["Comprar", "Rentar"];
+
+// Alineado a las categorías reales de tu cuenta de EasyBroker
+// (verificado contra duparcrealty.easybroker.com).
 const PROPERTY_TYPES = [
-  "Residencial",
-  "Industrial / Bodegas",
-  "Comercial",
-  "Terrenos",
+  "Casa",
+  "Departamento",
+  "Bodega industrial",
+  "Nave industrial",
+  "Terreno",
+  "Local comercial",
 ];
+
 const ZONES = [
   "Ciudad del Carmen",
-  "Isla del Carmen · Centro",
+  "Isla del Carmen",
   "Carretera Costera",
-  "Riviera Maya, Q. Roo",
+  "Riviera Maya",
 ];
 
 export default function SearchBar() {
   return (
-    <form className="flex w-full flex-col overflow-hidden rounded-sm border border-stone-300 bg-white sm:flex-row">
+    <form
+      action="/propiedades"
+      method="get"
+      className="flex w-full flex-col overflow-hidden rounded-sm border border-stone-300 bg-white sm:flex-row"
+    >
       <Segment label="Operación">
-        <select className="select-field" defaultValue={OPERATIONS[0]}>
+        <select name="operacion" className="select-field" defaultValue={OPERATIONS[0]}>
           {OPERATIONS.map((op) => (
             <option key={op}>{op}</option>
           ))}
@@ -26,17 +36,23 @@ export default function SearchBar() {
       </Segment>
 
       <Segment label="Tipo" border>
-        <select className="select-field" defaultValue={PROPERTY_TYPES[0]}>
+        <select name="tipo" className="select-field" defaultValue="">
+          <option value="">Todos</option>
           {PROPERTY_TYPES.map((type) => (
-            <option key={type}>{type}</option>
+            <option key={type} value={type}>
+              {type}
+            </option>
           ))}
         </select>
       </Segment>
 
       <Segment label="Zona" border>
-        <select className="select-field" defaultValue={ZONES[0]}>
+        <select name="zona" className="select-field" defaultValue="">
+          <option value="">Todas</option>
           {ZONES.map((zone) => (
-            <option key={zone}>{zone}</option>
+            <option key={zone} value={zone}>
+              {zone}
+            </option>
           ))}
         </select>
       </Segment>
