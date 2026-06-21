@@ -9,13 +9,8 @@ import {
 } from "@/lib/easybroker";
 
 export default function PropertyCard({ property }: { property: Property }) {
-  // Hasta que tengamos página propia de detalle (/propiedades/[id]),
-  // cada tarjeta enlaza directo al anuncio real en EasyBroker — así
-  // nunca lleva a un enlace roto mientras construimos esa página.
-  const href = property.url ?? "#";
-
   return (
-    <Link href={href} className="group block">
+    <Link href={`/propiedades/${property.public_id}`} className="group block">
       <PropertyImage
         src={getPropertyImage(property)}
         alt={property.title}

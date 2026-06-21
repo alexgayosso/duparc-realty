@@ -66,7 +66,7 @@ export default async function FeaturedProperties() {
           {properties.map((property) => (
             <Link
               key={property.public_id}
-              href={isLive ? property.url ?? "#" : "#"}
+              href={isLive ? `/propiedades/${property.public_id}` : "#"}
               className="group block"
             >
               <PropertyImage

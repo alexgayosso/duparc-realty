@@ -31,8 +31,8 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Buscador: ancho completo, fuera de la columna angosta de texto */}
-      <div className="mx-auto max-w-5xl px-6 pb-16 lg:px-16">
+      {/* Buscador: ancho completo, con separación clara del placeholder de arriba */}
+      <div className="mx-auto max-w-5xl px-6 pb-16 pt-14 lg:px-16">
         <SearchBar />
       </div>
     </section>

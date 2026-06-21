@@ -1,8 +1,8 @@
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, MapPin, Search } from "lucide-react";
 
 const OPERATIONS = ["Comprar", "Rentar"];
 
-// Lista EXACTA verificada contra duparcrealty.easybroker.com — no inventada.
+// Lista EXACTA verificada contra duparcrealty.easybroker.com - no inventada.
 const PROPERTY_TYPES = [
   "Bodega comercial",
   "Bodega industrial",
@@ -32,7 +32,7 @@ export default function SearchBar() {
       method="get"
       className="flex w-full flex-col overflow-hidden rounded-sm border border-stone-300 bg-white sm:flex-row"
     >
-      <Segment label="Operación">
+      <Segment label="Operación" icon="chevron">
         <select name="operacion" className="select-field" defaultValue={OPERATIONS[0]}>
           {OPERATIONS.map((op) => (
             <option key={op}>{op}</option>
@@ -40,7 +40,7 @@ export default function SearchBar() {
         </select>
       </Segment>
 
-      <Segment label="Tipo" border>
+      <Segment label="Tipo" border icon="chevron">
         <select name="tipo" className="select-field" defaultValue="">
           <option value="">Tipo de propiedad</option>
           {PROPERTY_TYPES.map((type) => (
@@ -51,9 +51,9 @@ export default function SearchBar() {
         </select>
       </Segment>
 
-      <Segment label="Zona" border>
-        {/* Texto libre, no un dropdown fijo: evita inventar nombres de
-            zona que quiza no coincidan exacto con tus datos reales. */}
+      <Segment label="Zona" border icon="pin">
+        {/* Texto libre, no un dropdown: location en EasyBroker es una
+            cadena de texto plana, no una lista fija de zonas. */}
         <input
           type="text"
           name="zona"
@@ -78,10 +78,12 @@ function Segment({
   label,
   children,
   border = false,
+  icon,
 }: {
   label: string;
   children: React.ReactNode;
   border?: boolean;
+  icon: "chevron" | "pin";
 }) {
   return (
     <label
@@ -94,10 +96,17 @@ function Segment({
       </span>
       <div className="relative flex-1">
         {children}
-        <ChevronDown
-          size={14}
-          className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-stone-400"
-        />
+        {icon === "chevron" ? (
+          <ChevronDown
+            size={14}
+            className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-stone-400"
+          />
+        ) : (
+          <MapPin
+            size={14}
+            className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-stone-400"
+          />
+        )}
       </div>
     </label>
   );

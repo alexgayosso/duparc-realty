@@ -1,25 +1,29 @@
 /**
  * Capa de servicio para la API de EasyBroker.
  *
- * Documentación verificada: https://dev.easybroker.com/reference
- * - Base URL:   https://api.easybroker.com/v1
- * - Auth:       header `X-Authorization: <API_KEY>` (NO es Bearer token)
- * - Límite:     20 requests/segundo, máx. 50 resultados por página
- * - IMPORTANTE: EasyBroker exige que su API solo se consuma desde backend
- *   (no desde el navegador). Por eso este archivo solo debe importarse
- *   desde Server Components o Route Handlers — nunca desde un componente
- *   con "use client". La env var EASYBROKER_API_KEY (sin prefijo
- *   NEXT_PUBLIC_) ya respeta esa regla por diseño.
+ * Forma de los datos VERIFICADA contra la API real (no documentacion,
+ * no suposiciones) el 21/06/2026 con la cuenta de Duparc Realty:
  *
- * Nota sobre campos no confirmados: `operations` y `property_images` son
- * la forma estándar documentada por EasyBroker para precio y fotos, pero
- * no pude verificarlos con una respuesta real (la cuenta de Duparc aún no
- * existe). En cuanto tengan API Key, revisen un GET /properties real y
- * ajustamos los nombres de campo si difieren.
+ * - `location` es una cadena de texto plana (ej. "Bivalbo, Carmen,
+ *   Campeche"), NO un objeto con city/city_area/region.
+ * - `search[operation_types][]` NO filtra nada del lado de EasyBroker
+ *   (confirmado: pedir solo "sale" regreso una renta de todos modos).
+ *   El filtro de compra/renta se aplica aqui mismo, despues de recibir
+ *   la respuesta, nunca confiando en ese parametro.
+ * - `search[property_types][]` SI funciona correctamente (confirmado).
+ * - No existe ningun campo de URL publica en la respuesta -- por eso
+ *   cada propiedad usa su propia pagina interna /propiedades/[id] en
+ *   vez de enlazar a EasyBroker directamente.
+ * - El listado no incluye `description`; eso solo aparece en el detalle
+ *   individual (GET /properties/:id).
+ *
+ * Base URL:   https://api.easybroker.com/v1
+ * Auth:       header X-Authorization: <API_KEY> (no es Bearer token)
+ * Limite:     20 requests/segundo, max. 50 resultados por pagina
  */
 
 const EASYBROKER_API_BASE = "https://api.easybroker.com/v1";
-const DEFAULT_REVALIDATE_SECONDS = 3600; // 1 hora — balance entre velocidad y frescura del inventario
+const DEFAULT_REVALIDATE_SECONDS = 3600;
 
 export class EasyBrokerError extends Error {
   status?: number;
@@ -30,30 +34,16 @@ export class EasyBrokerError extends Error {
   }
 }
 
-/* ----------------------------- Tipos ----------------------------- */
-
-export interface PropertyLocation {
-  name?: string;
-  street?: string | null;
-  city_area?: string | null;
-  city?: string | null;
-  region: string;
-  postal_code?: string | null;
-  show_exact_location?: boolean;
-  latitude?: number;
-  longitude?: number;
-}
-
 export interface PropertyOperation {
   type: "sale" | "rental";
   amount: number;
   currency: string;
   formatted_amount?: string;
-}
-
-export interface PropertyImage {
-  url: string;
-  title?: string | null;
+  unit?: string;
+  commission?: {
+    type: string;
+    value?: string;
+  };
 }
 
 export interface Property {
@@ -61,22 +51,20 @@ export interface Property {
   title: string;
   description?: string;
   property_type: string;
-  status?: string;
+  location: string;
+  operations: PropertyOperation[];
   bedrooms?: number | null;
   bathrooms?: number | null;
   half_bathrooms?: number | null;
   parking_spaces?: number | null;
   lot_size?: number | null;
   construction_size?: number | null;
-  location: PropertyLocation;
-  operations: PropertyOperation[];
-  property_images?: PropertyImage[];
   title_image_full?: string | null;
-  agency_id?: string;
-  agent_id?: string | null;
-  created_at?: string;
+  title_image_thumb?: string | null;
+  agent?: string | null;
+  show_prices?: boolean;
+  share_commission?: boolean;
   updated_at?: string;
-  url?: string;
 }
 
 export interface PropertyListResponse {
@@ -84,7 +72,7 @@ export interface PropertyListResponse {
     limit: number;
     page: number;
     total: number;
-    next_page: number | null;
+    next_page: string | null;
   };
   content: Property[];
 }
@@ -93,17 +81,11 @@ export interface PropertyFilters {
   page?: number;
   limit?: number;
   propertyTypes?: string[];
-  /** Verificar en su plan si `search[operation_types][]` está soportado;
-   *  si no, filtrar `operations[].type` del lado del cliente tras el fetch. */
   operationTypes?: Array<"sale" | "rental">;
   statuses?: string[];
   sortBy?: "updated_at-asc" | "updated_at-desc";
-  /** EasyBroker no documenta un filtro de zona en /properties; aplicamos
-   *  este filtro nosotros mismos sobre location.city / city_area. */
   zone?: string;
 }
-
-/* --------------------------- Fetch base --------------------------- */
 
 type SearchParamValue = string | number | string[] | undefined;
 
@@ -132,7 +114,7 @@ async function easyBrokerFetch<T>(
 
   if (!apiKey) {
     throw new EasyBrokerError(
-      "EASYBROKER_API_KEY no está configurada en .env.local"
+      "EASYBROKER_API_KEY no esta configurada en .env.local"
     );
   }
 
@@ -141,14 +123,12 @@ async function easyBrokerFetch<T>(
       "X-Authorization": apiKey,
       accept: "application/json",
     },
-    // Cache de datos de Next.js (equivalente a ISR para fetch nativo):
-    // el inventario se revalida cada `revalidateSeconds`, no en cada visita.
     next: { revalidate: revalidateSeconds },
   });
 
   if (!response.ok) {
     throw new EasyBrokerError(
-      `EasyBroker respondió ${response.status} en ${path}`,
+      `EasyBroker respondio ${response.status} en ${path}`,
       response.status
     );
   }
@@ -157,7 +137,7 @@ async function easyBrokerFetch<T>(
 }
 
 function buildListParams(
-  filters: PropertyFilters
+  filters: Omit<PropertyFilters, "operationTypes" | "zone">
 ): Record<string, SearchParamValue> {
   const params: Record<string, SearchParamValue> = {
     page: filters.page ?? 1,
@@ -168,9 +148,6 @@ function buildListParams(
   if (filters.propertyTypes?.length) {
     params["search[property_types][]"] = filters.propertyTypes;
   }
-  if (filters.operationTypes?.length) {
-    params["search[operation_types][]"] = filters.operationTypes;
-  }
   if (filters.sortBy) {
     params["search[sort_by]"] = filters.sortBy;
   }
@@ -180,16 +157,9 @@ function buildListParams(
 
 function matchesZone(property: Property, zone?: string): boolean {
   if (!zone) return true;
-  const haystack = [property.location?.city_area, property.location?.city]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-  return haystack.includes(zone.toLowerCase());
+  return property.location?.toLowerCase().includes(zone.toLowerCase()) ?? false;
 }
 
-/* ------------------------- Funciones públicas ------------------------- */
-
-/** Propiedades destacadas para el Home: las más recientes publicadas. */
 export async function getFeaturedProperties(limit = 6): Promise<Property[]> {
   const data = await easyBrokerFetch<PropertyListResponse>(
     "/properties",
@@ -198,31 +168,56 @@ export async function getFeaturedProperties(limit = 6): Promise<Property[]> {
   return data.content;
 }
 
-/** Listado completo con filtros, para la página de búsqueda. */
 export async function getAllProperties(
   filters: PropertyFilters = {}
 ): Promise<PropertyListResponse> {
+  const wantsOperationFilter = Boolean(filters.operationTypes?.length);
+  const targetLimit = filters.limit ?? 24;
+
+  const fetchLimit = wantsOperationFilter
+    ? Math.min(Math.max(targetLimit * 3, 50), 50)
+    : targetLimit;
+
   const data = await easyBrokerFetch<PropertyListResponse>(
     "/properties",
-    buildListParams(filters)
+    buildListParams({ ...filters, limit: fetchLimit })
   );
 
-  if (filters.zone) {
-    return {
-      ...data,
-      content: data.content.filter((p) => matchesZone(p, filters.zone)),
-    };
+  let content = data.content;
+
+  if (wantsOperationFilter) {
+    content = content.filter((p) =>
+      p.operations.some((op) => filters.operationTypes!.includes(op.type))
+    );
+    content = content.slice(0, targetLimit);
   }
 
-  return data;
+  if (filters.zone) {
+    content = content.filter((p) => matchesZone(p, filters.zone));
+  }
+
+  return { ...data, content };
 }
 
-/** Detalle de una propiedad para su página individual. */
 export async function getPropertyById(id: string): Promise<Property> {
   return easyBrokerFetch<Property>(`/properties/${id}`, {});
 }
 
-/* --------------------------- Helpers de UI --------------------------- */
+export async function getPropertiesByIds(ids: string[]): Promise<Property[]> {
+  const results = await Promise.allSettled(ids.map((id) => getPropertyById(id)));
+
+  return results
+    .filter((result): result is PromiseFulfilledResult<Property> => {
+      if (result.status === "rejected") {
+        console.error(
+          "[easybroker] getPropertiesByIds - ID invalido u omitido:",
+          (result.reason as Error)?.message
+        );
+      }
+      return result.status === "fulfilled";
+    })
+    .map((result) => result.value);
+}
 
 export function getPropertyPrice(property: Property): string {
   const operation = property.operations?.[0];
@@ -242,90 +237,46 @@ export function getPropertyPrice(property: Property): string {
 export function getPropertySpecs(property: Property): string {
   const parts: string[] = [];
   if (property.bedrooms) parts.push(`${property.bedrooms} Hab`);
-  if (property.bathrooms) parts.push(`${property.bathrooms} Baños`);
-  if (property.construction_size) parts.push(`${property.construction_size} m²`);
-  return parts.join(" · ");
+  if (property.bathrooms) parts.push(`${property.bathrooms} Banos`);
+  if (property.construction_size) parts.push(`${property.construction_size} m2`);
+  return parts.join(" - ");
 }
 
 export function getPropertyLocationLabel(property: Property): string {
-  return (
-    [property.location?.city_area, property.location?.city]
-      .filter(Boolean)
-      .join(", ") || property.location?.region || ""
-  );
+  return property.location ?? "";
 }
 
 export function getPropertyImage(property: Property): string | null {
-  return (
-    property.title_image_full ?? property.property_images?.[0]?.url ?? null
-  );
+  return property.title_image_full ?? null;
 }
 
-/**
- * Datos de muestra: se usan SOLO si la llamada a EasyBroker falla
- * (típicamente porque EASYBROKER_API_KEY no está configurada todavía).
- * Conservan la misma forma que `Property` para que el componente que
- * los consume no necesite ninguna lógica distinta entre datos reales
- * y datos de muestra.
- */
 export const SAMPLE_PROPERTIES: Property[] = [
   {
     public_id: "SAMPLE-1",
-    title: "Residencia frente al mar — Carretera Costera",
+    title: "Residencia frente al mar - Carretera Costera",
     property_type: "Casa",
-    status: "published",
+    location: "Carretera Costera, Carmen, Campeche",
     bedrooms: 4,
     bathrooms: 5,
     construction_size: 480,
-    location: {
-      region: "Campeche",
-      city: "Ciudad del Carmen",
-      city_area: "Carretera Costera",
-    },
     operations: [],
   },
   {
     public_id: "SAMPLE-2",
-    title: "Nave industrial — Zona Industrial",
-    property_type: "Bodega comercial",
-    status: "published",
+    title: "Nave industrial - Zona Industrial",
+    property_type: "Nave industrial",
+    location: "Zona Industrial, Carmen, Campeche",
     construction_size: 2200,
-    location: {
-      region: "Campeche",
-      city: "Ciudad del Carmen",
-      city_area: "Zona Industrial",
-    },
     operations: [],
   },
   {
     public_id: "SAMPLE-3",
-    title: "Penthouse — Isla del Carmen",
+    title: "Penthouse - Isla del Carmen",
     property_type: "Departamento",
-    status: "published",
+    location: "Isla del Carmen, Carmen, Campeche",
     bedrooms: 3,
     bathrooms: 3,
     construction_size: 210,
-    location: {
-      region: "Campeche",
-      city: "Ciudad del Carmen",
-      city_area: "Isla del Carmen",
-    },
     operations: [],
   },
 ];
-
-export async function getPropertiesByIds(ids: string[]): Promise<Property[]> {
-  const results = await Promise.allSettled(ids.map((id) => getPropertyById(id)));
-
-  return results
-    .filter((result): result is PromiseFulfilledResult<Property> => {
-      if (result.status === "rejected") {
-        console.error(
-          "[easybroker] getPropertiesByIds - ID invalido u omitido:",
-          (result.reason as Error)?.message
-        );
-      }
-      return result.status === "fulfilled";
-    })
-    .map((result) => result.value);
-}
