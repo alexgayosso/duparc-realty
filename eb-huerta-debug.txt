@@ -1,0 +1,22 @@
+﻿=== A: Solo tipo=Huerta (sin operacion) ===
+https://api.easybroker.com/v1/properties?limit=10&search%5Bproperty_types%5D%5B%5D=Huerta
+TOTAL: 0
+
+=== B: Huerta + operation_type=rental (singular, lo que puse) ===
+https://api.easybroker.com/v1/properties?limit=10&search%5Bproperty_types%5D%5B%5D=Huerta&search%5Boperation_type%5D=rental
+TOTAL: 0
+
+=== C: Solo operation_type=rental (sin tipo) ===
+https://api.easybroker.com/v1/properties?limit=10&search%5Boperation_type%5D=rental
+TOTAL: 1120
+EB-BB3579 | Casa en condominio | op: rental
+EB-BG3770 | Casa | op: rental
+EB-BG3780 | Casa | op: rental
+EB-BG3794 | Casa | op: rental
+EB-BG4120 | Casa | op: rental
+EB-BG4209 | Casa | op: rental
+EB-BG4236 | Casa | op: rental
+EB-BG4244 | Casa | op: rental
+EB-BG4271 | Casa | op: rental
+EB-BG4280 | Casa | op: rental
+

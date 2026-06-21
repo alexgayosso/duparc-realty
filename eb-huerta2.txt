@@ -1,0 +1,6 @@
+﻿=== 1: Huerta SIN filtro de status ===
+TOTAL: 0
+
+=== 2: Huerta status published explicito ===
+TOTAL: 0
+

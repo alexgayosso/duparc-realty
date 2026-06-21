@@ -1,0 +1,67 @@
+﻿{
+    "pagination":  {
+                       "limit":  20,
+                       "page":  1,
+                       "total":  19,
+                       "next_page":  null
+                   },
+    "content":  [
+                    {
+                        "name":  "Bodega comercial"
+                    },
+                    {
+                        "name":  "Bodega industrial"
+                    },
+                    {
+                        "name":  "Casa"
+                    },
+                    {
+                        "name":  "Casa con uso de suelo"
+                    },
+                    {
+                        "name":  "Casa en condominio"
+                    },
+                    {
+                        "name":  "Departamento"
+                    },
+                    {
+                        "name":  "Edificio"
+                    },
+                    {
+                        "name":  "Huerta"
+                    },
+                    {
+                        "name":  "Local comercial"
+                    },
+                    {
+                        "name":  "Local en centro comercial"
+                    },
+                    {
+                        "name":  "Nave industrial"
+                    },
+                    {
+                        "name":  "Oficina"
+                    },
+                    {
+                        "name":  "Otro"
+                    },
+                    {
+                        "name":  "Quinta"
+                    },
+                    {
+                        "name":  "Rancho"
+                    },
+                    {
+                        "name":  "Terreno"
+                    },
+                    {
+                        "name":  "Terreno comercial"
+                    },
+                    {
+                        "name":  "Terreno industrial"
+                    },
+                    {
+                        "name":  "Villa"
+                    }
+                ]
+}

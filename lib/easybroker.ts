@@ -191,6 +191,56 @@ export async function getFeaturedProperties(limit = 6): Promise<Property[]> {
   return data.content;
 }
 
+/**
+ * Recorre TODO el inventario publicado (todas las paginas, en lotes de
+ * 50) y devuelve la lista de tipos de propiedad que REALMENTE existen,
+ * ordenada alfabeticamente. Asi el dropdown de busqueda nunca ofrece un
+ * tipo del que no hay nada (ej. "Huerta" si no tienes huertas), y si
+ * Adrian sube un tipo nuevo, aparece solo al dia siguiente.
+ *
+ * Cacheado 24h (revalidate). El recorrido completo solo corre 1 vez al
+ * dia; el resto de visitas leen el resultado guardado al instante.
+ *
+ * Tope de seguridad de 60 paginas (3,000 propiedades) para no quedar en
+ * un bucle infinito si la API devolviera algo inesperado.
+ */
+export async function getAvailablePropertyTypes(): Promise<string[]> {
+  const ONE_DAY = 60 * 60 * 24;
+  const PAGE_SIZE = 50;
+  const MAX_PAGES = 60;
+
+  const found = new Set<string>();
+
+  try {
+    for (let page = 1; page <= MAX_PAGES; page++) {
+      const data = await easyBrokerFetch<PropertyListResponse>(
+        "/properties",
+        {
+          page,
+          limit: PAGE_SIZE,
+          "search[statuses][]": ["published"],
+        },
+        ONE_DAY
+      );
+
+      for (const property of data.content) {
+        if (property.property_type) found.add(property.property_type);
+      }
+
+      if (!data.pagination.next_page) break;
+    }
+  } catch (error) {
+    console.error(
+      "[getAvailablePropertyTypes] Error recorriendo inventario:",
+      (error as Error).message
+    );
+    // Si algo falla a medio recorrido, devolvemos lo que alcanzamos a
+    // juntar (mejor un dropdown parcial que uno vacio).
+  }
+
+  return Array.from(found).sort((a, b) => a.localeCompare(b, "es"));
+}
+
 export async function getAllProperties(filters: PropertyFilters = {}): Promise<PropertyListResponse> {
   // Todo el filtrado (operacion + tipo) lo hace EasyBroker del lado del
   // servidor, sobre las 2,132 propiedades. Por eso la paginacion (total,

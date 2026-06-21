@@ -1,39 +1,27 @@
 import { ChevronDown, Search } from "lucide-react";
 
-// Mismas 3 opciones, mismo texto, mismo orden que duparcrealty.easybroker.com
+// Mismas 3 opciones, mismo texto que duparcrealty.easybroker.com
 const OPERATIONS = [
   "Propiedades en Venta",
   "Propiedades en Renta",
   "Rentas Temporales",
 ];
 
-// Lista EXACTA verificada contra duparcrealty.easybroker.com - no inventada.
-const PROPERTY_TYPES = [
-  "Bodega comercial",
-  "Bodega industrial",
-  "Casa",
-  "Casa con uso de suelo",
-  "Casa en condominio",
-  "Departamento",
-  "Edificio",
-  "Huerta",
-  "Local comercial",
-  "Local en centro comercial",
-  "Nave industrial",
-  "Oficina",
-  "Otro",
-  "Quinta",
-  "Rancho",
-  "Terreno",
-  "Terreno comercial",
-  "Terreno industrial",
-  "Villa",
-];
+/**
+ * Los tipos de propiedad llegan como prop desde el servidor
+ * (getAvailablePropertyTypes), generados a partir del inventario REAL.
+ * Si no se pasan (o fallo la carga), se usa una lista minima de respaldo
+ * para que el buscador nunca quede sin opciones.
+ */
+const FALLBACK_TYPES = ["Casa", "Departamento", "Terreno", "Local comercial"];
 
-// Sin campo de Zona: el buscador real de EasyBroker tampoco lo tiene en
-// su barra principal (solo Operacion + Tipo + boton). La ubicacion vive
-// como un filtro aparte dentro de los resultados, no aqui.
-export default function SearchBar() {
+export default function SearchBar({
+  propertyTypes,
+}: {
+  propertyTypes?: string[];
+}) {
+  const types = propertyTypes && propertyTypes.length > 0 ? propertyTypes : FALLBACK_TYPES;
+
   return (
     <form
       action="/propiedades"
@@ -51,7 +39,7 @@ export default function SearchBar() {
       <Segment label="Tipo" border>
         <select name="tipo" className="select-field" defaultValue="">
           <option value="">Tipo de propiedad</option>
-          {PROPERTY_TYPES.map((type) => (
+          {types.map((type) => (
             <option key={type} value={type}>
               {type}
             </option>

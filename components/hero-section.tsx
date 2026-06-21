@@ -1,7 +1,17 @@
 import ImagePlaceholder from "./image-placeholder";
 import SearchBar from "./search-bar";
+import { getAvailablePropertyTypes } from "@/lib/easybroker";
 
-export default function HeroSection() {
+export default async function HeroSection() {
+  // Tipos reales del inventario (cacheado 24h dentro de la funcion).
+  // Si falla, SearchBar usa su lista de respaldo.
+  let propertyTypes: string[] = [];
+  try {
+    propertyTypes = await getAvailablePropertyTypes();
+  } catch (error) {
+    console.error("[HeroSection] No se pudieron cargar los tipos:", (error as Error).message);
+  }
+
   return (
     <section className="relative overflow-hidden bg-stone-50 pt-24 lg:pt-0">
       <div className="mx-auto grid max-w-[1700px] lg:grid-cols-[1fr_1.15fr]">
@@ -33,7 +43,7 @@ export default function HeroSection() {
 
       {/* Buscador: ancho completo, con separación clara del placeholder de arriba */}
       <div className="mx-auto max-w-5xl px-6 pb-16 pt-14 lg:px-16">
-        <SearchBar />
+        <SearchBar propertyTypes={propertyTypes} />
       </div>
     </section>
   );
