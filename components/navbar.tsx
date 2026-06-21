@@ -31,14 +31,14 @@ export default function Navbar() {
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-        {/* Logo — conserva las letras del logotipo original (granate + gris) */}
-        <Link href="/" className="flex items-baseline gap-2">
-          <span className="font-display text-xl tracking-[0.1em] text-accent-700 sm:text-2xl">
-            DUPARC
-          </span>
-          <span className="font-body text-[10px] font-semibold tracking-[0.3em] text-stone-500 sm:text-xs">
-            REALTY
-          </span>
+        {/* Logo oficial de Duparc Realty */}
+        <Link href="/" className="flex items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-duparc.png"
+            alt="Duparc Realty"
+            className="h-9 w-auto sm:h-11"
+          />
         </Link>
 
         {/* Navegación desktop */}
