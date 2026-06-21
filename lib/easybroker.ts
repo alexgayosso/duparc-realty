@@ -109,7 +109,7 @@ export interface PropertyFilters {
   page?: number;
   limit?: number;
   propertyTypes?: string[];
-  operationTypes?: Array<"sale" | "rental">;
+  operationType?: "sale" | "rental";
   statuses?: string[];
   sortBy?: "updated_at-asc" | "updated_at-desc";
   zone?: string;
@@ -154,7 +154,7 @@ async function easyBrokerFetch<T>(
 }
 
 function buildListParams(
-  filters: Omit<PropertyFilters, "operationTypes" | "zone">
+  filters: Omit<PropertyFilters, "zone">
 ): Record<string, SearchParamValue> {
   const params: Record<string, SearchParamValue> = {
     page: filters.page ?? 1,
@@ -163,6 +163,14 @@ function buildListParams(
   };
   if (filters.propertyTypes?.length) {
     params["search[property_types][]"] = filters.propertyTypes;
+  }
+  // CORRECTO segun doc oficial de EasyBroker: search[operation_type]
+  // es SINGULAR y filtra del lado del servidor sobre TODO el inventario
+  // (no un array, no operation_types). Antes lo mandabamos mal como
+  // array plural, EasyBroker lo ignoraba, y terminabamos filtrando una
+  // muestra de 50 localmente -> de ahi los "0 resultados" falsos.
+  if (filters.operationType) {
+    params["search[operation_type]"] = filters.operationType;
   }
   if (filters.sortBy) {
     params["search[sort_by]"] = filters.sortBy;
@@ -184,26 +192,24 @@ export async function getFeaturedProperties(limit = 6): Promise<Property[]> {
 }
 
 export async function getAllProperties(filters: PropertyFilters = {}): Promise<PropertyListResponse> {
-  const wantsOperationFilter = Boolean(filters.operationTypes?.length);
-  const targetLimit = filters.limit ?? 24;
-  const fetchLimit = wantsOperationFilter ? Math.min(Math.max(targetLimit * 3, 50), 50) : targetLimit;
-
+  // Todo el filtrado (operacion + tipo) lo hace EasyBroker del lado del
+  // servidor, sobre las 2,132 propiedades. Por eso la paginacion (total,
+  // page) que regresa es EXACTA y replica el comportamiento de su buscador.
   const data = await easyBrokerFetch<PropertyListResponse>(
     "/properties",
-    buildListParams({ ...filters, limit: fetchLimit })
+    buildListParams(filters)
   );
 
-  let content = data.content;
-
-  if (wantsOperationFilter) {
-    content = content.filter((p) => p.operations.some((op) => filters.operationTypes!.includes(op.type)));
-    content = content.slice(0, targetLimit);
-  }
+  // El filtro de zona si se hace localmente porque la API no lo expone
+  // como filtro de servidor en este plan. Solo aplica si se pidio.
   if (filters.zone) {
-    content = content.filter((p) => matchesZone(p, filters.zone));
+    return {
+      ...data,
+      content: data.content.filter((p) => matchesZone(p, filters.zone)),
+    };
   }
 
-  return { ...data, content };
+  return data;
 }
 
 export async function getPropertyById(id: string): Promise<Property> {
