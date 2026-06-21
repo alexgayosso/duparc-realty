@@ -1,25 +1,25 @@
 /**
  * Capa de servicio para la API de EasyBroker.
  *
- * Forma de los datos VERIFICADA contra la API real (no documentacion,
- * no suposiciones) el 21/06/2026 con la cuenta de Duparc Realty:
+ * IMPORTANTE -- inconsistencia real confirmada entre los 2 endpoints:
  *
- * - `location` es una cadena de texto plana (ej. "Bivalbo, Carmen,
- *   Campeche"), NO un objeto con city/city_area/region.
- * - `search[operation_types][]` NO filtra nada del lado de EasyBroker
- *   (confirmado: pedir solo "sale" regreso una renta de todos modos).
- *   El filtro de compra/renta se aplica aqui mismo, despues de recibir
- *   la respuesta, nunca confiando en ese parametro.
- * - `search[property_types][]` SI funciona correctamente (confirmado).
- * - No existe ningun campo de URL publica en la respuesta -- por eso
- *   cada propiedad usa su propia pagina interna /propiedades/[id] en
- *   vez de enlazar a EasyBroker directamente.
- * - El listado no incluye `description`; eso solo aparece en el detalle
- *   individual (GET /properties/:id).
+ *   GET /properties        (listado)  -> location: STRING plano
+ *                                       -> fotos en title_image_full / title_image_thumb
+ *                                       -> agent: STRING (solo nombre)
  *
- * Base URL:   https://api.easybroker.com/v1
- * Auth:       header X-Authorization: <API_KEY> (no es Bearer token)
- * Limite:     20 requests/segundo, max. 50 resultados por pagina
+ *   GET /properties/:id    (detalle)  -> location: OBJETO {name, street, lat, lng...}
+ *                                       -> fotos en property_images[] (array completo)
+ *                                       -> agent: OBJETO {name, email, mobile_phone...}
+ *
+ * Por eso `location` y `agent` se tipan como union (string | objeto) y
+ * SIEMPRE se leen a traves de los helpers de abajo (getPropertyImages,
+ * getPropertyLocationLabel, getAgentInfo) -- nunca accedan a esos campos
+ * directamente desde un componente, o van a romperse dependiendo de cual
+ * endpoint los alimento.
+ *
+ * `private_description` es informacion INTERNA del agente (notas de
+ * comision, contactos internos) -- NUNCA se muestra en el sitio publico.
+ * Solo se usa `description`.
  */
 
 const EASYBROKER_API_BASE = "https://api.easybroker.com/v1";
@@ -40,10 +40,35 @@ export interface PropertyOperation {
   currency: string;
   formatted_amount?: string;
   unit?: string;
-  commission?: {
-    type: string;
-    value?: string;
-  };
+  commission?: { type: string; value?: string };
+}
+
+export interface PropertyImageItem {
+  title: string | null;
+  url: string;
+}
+
+export interface PropertyLocationObject {
+  name?: string;
+  street?: string;
+  postal_code?: string | null;
+  latitude?: number;
+  longitude?: number;
+  show_exact_location?: boolean;
+}
+
+export interface PropertyAgentObject {
+  id?: number;
+  name?: string;
+  full_name?: string;
+  mobile_phone?: string;
+  email?: string;
+  profile_image_url?: string;
+}
+
+export interface PropertyFeature {
+  name: string;
+  category?: string;
 }
 
 export interface Property {
@@ -51,7 +76,7 @@ export interface Property {
   title: string;
   description?: string;
   property_type: string;
-  location: string;
+  location: string | PropertyLocationObject;
   operations: PropertyOperation[];
   bedrooms?: number | null;
   bathrooms?: number | null;
@@ -61,7 +86,10 @@ export interface Property {
   construction_size?: number | null;
   title_image_full?: string | null;
   title_image_thumb?: string | null;
-  agent?: string | null;
+  property_images?: PropertyImageItem[];
+  agent?: string | PropertyAgentObject | null;
+  features?: PropertyFeature[];
+  public_url?: string;
   show_prices?: boolean;
   share_commission?: boolean;
   updated_at?: string;
@@ -89,10 +117,7 @@ export interface PropertyFilters {
 
 type SearchParamValue = string | number | string[] | undefined;
 
-function buildUrl(
-  path: string,
-  params: Record<string, SearchParamValue>
-): string {
+function buildUrl(path: string, params: Record<string, SearchParamValue>): string {
   const url = new URL(`${EASYBROKER_API_BASE}${path}`);
   for (const [key, value] of Object.entries(params)) {
     if (value === undefined) continue;
@@ -113,24 +138,16 @@ async function easyBrokerFetch<T>(
   const apiKey = process.env.EASYBROKER_API_KEY;
 
   if (!apiKey) {
-    throw new EasyBrokerError(
-      "EASYBROKER_API_KEY no esta configurada en .env.local"
-    );
+    throw new EasyBrokerError("EASYBROKER_API_KEY no esta configurada en .env.local");
   }
 
   const response = await fetch(buildUrl(path, params), {
-    headers: {
-      "X-Authorization": apiKey,
-      accept: "application/json",
-    },
+    headers: { "X-Authorization": apiKey, accept: "application/json" },
     next: { revalidate: revalidateSeconds },
   });
 
   if (!response.ok) {
-    throw new EasyBrokerError(
-      `EasyBroker respondio ${response.status} en ${path}`,
-      response.status
-    );
+    throw new EasyBrokerError(`EasyBroker respondio ${response.status} en ${path}`, response.status);
   }
 
   return response.json() as Promise<T>;
@@ -144,20 +161,18 @@ function buildListParams(
     limit: filters.limit ?? 20,
     "search[statuses][]": filters.statuses ?? ["published"],
   };
-
   if (filters.propertyTypes?.length) {
     params["search[property_types][]"] = filters.propertyTypes;
   }
   if (filters.sortBy) {
     params["search[sort_by]"] = filters.sortBy;
   }
-
   return params;
 }
 
 function matchesZone(property: Property, zone?: string): boolean {
   if (!zone) return true;
-  return property.location?.toLowerCase().includes(zone.toLowerCase()) ?? false;
+  return getPropertyLocationLabel(property).toLowerCase().includes(zone.toLowerCase());
 }
 
 export async function getFeaturedProperties(limit = 6): Promise<Property[]> {
@@ -168,15 +183,10 @@ export async function getFeaturedProperties(limit = 6): Promise<Property[]> {
   return data.content;
 }
 
-export async function getAllProperties(
-  filters: PropertyFilters = {}
-): Promise<PropertyListResponse> {
+export async function getAllProperties(filters: PropertyFilters = {}): Promise<PropertyListResponse> {
   const wantsOperationFilter = Boolean(filters.operationTypes?.length);
   const targetLimit = filters.limit ?? 24;
-
-  const fetchLimit = wantsOperationFilter
-    ? Math.min(Math.max(targetLimit * 3, 50), 50)
-    : targetLimit;
+  const fetchLimit = wantsOperationFilter ? Math.min(Math.max(targetLimit * 3, 50), 50) : targetLimit;
 
   const data = await easyBrokerFetch<PropertyListResponse>(
     "/properties",
@@ -186,12 +196,9 @@ export async function getAllProperties(
   let content = data.content;
 
   if (wantsOperationFilter) {
-    content = content.filter((p) =>
-      p.operations.some((op) => filters.operationTypes!.includes(op.type))
-    );
+    content = content.filter((p) => p.operations.some((op) => filters.operationTypes!.includes(op.type)));
     content = content.slice(0, targetLimit);
   }
-
   if (filters.zone) {
     content = content.filter((p) => matchesZone(p, filters.zone));
   }
@@ -205,24 +212,21 @@ export async function getPropertyById(id: string): Promise<Property> {
 
 export async function getPropertiesByIds(ids: string[]): Promise<Property[]> {
   const results = await Promise.allSettled(ids.map((id) => getPropertyById(id)));
-
   return results
     .filter((result): result is PromiseFulfilledResult<Property> => {
       if (result.status === "rejected") {
-        console.error(
-          "[easybroker] getPropertiesByIds - ID invalido u omitido:",
-          (result.reason as Error)?.message
-        );
+        console.error("[easybroker] getPropertiesByIds - ID invalido u omitido:", (result.reason as Error)?.message);
       }
       return result.status === "fulfilled";
     })
     .map((result) => result.value);
 }
 
+/* --------------------------- Helpers de UI --------------------------- */
+
 export function getPropertyPrice(property: Property): string {
   const operation = property.operations?.[0];
   if (!operation) return "Disponible bajo consulta";
-
   const formatted =
     operation.formatted_amount ??
     new Intl.NumberFormat("es-MX", {
@@ -230,7 +234,6 @@ export function getPropertyPrice(property: Property): string {
       currency: operation.currency || "MXN",
       maximumFractionDigits: 0,
     }).format(operation.amount);
-
   return operation.type === "rental" ? `${formatted} / mes` : formatted;
 }
 
@@ -242,12 +245,40 @@ export function getPropertySpecs(property: Property): string {
   return parts.join(" - ");
 }
 
+/** Siempre usar esta funcion -- nunca leer property.location directo. */
 export function getPropertyLocationLabel(property: Property): string {
-  return property.location ?? "";
+  if (typeof property.location === "string") return property.location;
+  return property.location?.name ?? "";
 }
 
+/** Todas las fotos disponibles, sin importar de cual endpoint vinieron. */
+export function getPropertyImages(property: Property): string[] {
+  const fromDetail = property.property_images?.map((img) => img.url) ?? [];
+  if (fromDetail.length > 0) return fromDetail;
+  if (property.title_image_full) return [property.title_image_full];
+  return [];
+}
+
+/** Una sola foto -- para tarjetas (Destacadas, resultados de busqueda). */
 export function getPropertyImage(property: Property): string | null {
-  return property.title_image_full ?? null;
+  return getPropertyImages(property)[0] ?? null;
+}
+
+/** Siempre usar esta funcion -- nunca leer property.agent directo. */
+export function getAgentInfo(property: Property): {
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+} {
+  if (!property.agent) return { name: null, email: null, phone: null };
+  if (typeof property.agent === "string") {
+    return { name: property.agent, email: null, phone: null };
+  }
+  return {
+    name: property.agent.full_name ?? property.agent.name ?? null,
+    email: property.agent.email ?? null,
+    phone: property.agent.mobile_phone ?? null,
+  };
 }
 
 export const SAMPLE_PROPERTIES: Property[] = [

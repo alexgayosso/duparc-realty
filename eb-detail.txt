@@ -1,0 +1,242 @@
+﻿{
+    "public_id":  "EB-PA2171",
+    "title":  "Casa en Venta Residencial Canterías, Ciudad del Carmen, Campeche.",
+    "description":  "Casa en Venta en Residencial Canterías ubicado en Km 11.5 Carretera Carmen a Puerto Real, Ciudad del Carmen, Campeche. \n\nREFERENCIAS: Cerca de Oficinas de Pemex del km 4.5 y del Colegio Morelos de Lizardi.\n\nCARACTERÍSTICAS:\nCasa residencial de 2 niveles.\n\n\nPLANTA BAJA:\nSala\nComedor\nCocina Integral\nMedio Baño\n1 Recámara con baño completo\nÁrea de lavado techado\nCuarto de servicio con baño\nPatio \nArea de lavado techada\nGarage techado para 2 vehículos \n\nPLANTA ALTA:\nSala de TV\n1 Recámara Principal con vestidor, baño y acceso a la terraza\n2 Recámaras Secundarias con closet y baño en cada una \n\nEQUIPAMIENTO: \nBoiler\nGas estacionario\n\n\nÁREAS COMUNES: \nPiscina\nPalapa social con baños\nÁrea de juegos infantiles\n\nSEGURIDAD: \nCaseta de vigilancia\nAcceso controlado",
+    "bedrooms":  4,
+    "bathrooms":  4,
+    "half_bathrooms":  1,
+    "parking_spaces":  2,
+    "lot_size":  null,
+    "construction_size":  null,
+    "lot_length":  null,
+    "lot_width":  null,
+    "floors":  null,
+    "floor":  null,
+    "age":  null,
+    "internal_id":  null,
+    "expenses":  null,
+    "location":  {
+                     "name":  "Canterías, Carmen, Campeche",
+                     "latitude":  18.6660255,
+                     "longitude":  -91.7492803,
+                     "street":  "San Miguel Arcángel",
+                     "postal_code":  null,
+                     "show_exact_location":  true,
+                     "hide_exact_location":  false,
+                     "exterior_number":  null,
+                     "interior_number":  null
+                 },
+    "property_type":  "Casa",
+    "created_at":  "2023-12-11T16:56:05-06:00",
+    "updated_at":  "2026-03-20T17:09:27-06:00",
+    "published_at":  "2023-12-11T16:59:24-06:00",
+    "operations":  [
+                       {
+                           "type":  "sale",
+                           "amount":  3850000.0,
+                           "currency":  "MXN",
+                           "formatted_amount":  "$3,850,000 MXN",
+                           "commission":  {
+                                              "type":  "unspecified"
+                                          },
+                           "unit":  "total"
+                       }
+                   ],
+    "property_files":  [
+
+                       ],
+    "videos":  [
+
+               ],
+    "virtual_tour":  null,
+    "collaboration_notes":  null,
+    "public_url":  "https://www.easybroker.com/mx/listings/casa-en-venta-residencial-canterias-ciudad-del-carmen-campeche-canterias",
+    "shared_commission_percentage":  null,
+    "exclusive":  null,
+    "foreclosure":  false,
+    "uncovered_space":  null,
+    "tags":  [
+
+             ],
+    "private_description":  "alfa Aguilar\r\n\r\nEn Canterías se paga: $2,350 pesos de mantenimiento",
+    "show_prices":  true,
+    "share_commission":  false,
+    "property_images":  [
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202659/EB-PA2171.jpg?version=1702335387"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202656/EB-PA2171.jpg?version=1702335386"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202660/EB-PA2171.jpg?version=1702335388"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202661/EB-PA2171.jpg?version=1702335388"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202788/EB-PA2171.jpg?version=1702335545"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202786/EB-PA2171.jpg?version=1702335545"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202787/EB-PA2171.jpg?version=1702335545"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202789/EB-PA2171.jpg?version=1702335545"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202790/EB-PA2171.jpg?version=1702335545"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202791/EB-PA2171.jpg?version=1702335545"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202792/EB-PA2171.jpg?version=1702335546"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202793/EB-PA2171.jpg?version=1702335546"
+                            },
+                            {
+                                "title":  null,
+                                "url":  "https://assets.easybroker.com/property_images/4172171/69202794/EB-PA2171.jpg?version=1702335546"
+                            }
+                        ],
+    "images":  [
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202659/EB-PA2171.jpg?version=1702335387"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202656/EB-PA2171.jpg?version=1702335386"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202660/EB-PA2171.jpg?version=1702335388"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202661/EB-PA2171.jpg?version=1702335388"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202788/EB-PA2171.jpg?version=1702335545"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202786/EB-PA2171.jpg?version=1702335545"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202787/EB-PA2171.jpg?version=1702335545"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202789/EB-PA2171.jpg?version=1702335545"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202790/EB-PA2171.jpg?version=1702335545"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202791/EB-PA2171.jpg?version=1702335545"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202792/EB-PA2171.jpg?version=1702335546"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202793/EB-PA2171.jpg?version=1702335546"
+                   },
+                   {
+                       "title":  null,
+                       "url":  "https://assets.easybroker.com/property_images/4172171/69202794/EB-PA2171.jpg?version=1702335546"
+                   }
+               ],
+    "agent":  {
+                  "id":  29830,
+                  "name":  "ADRIAN GAYOSSO",
+                  "full_name":  "ADRIAN GAYOSSO",
+                  "mobile_phone":  "+529381502013",
+                  "profile_image_url":  "https://assets.easybroker.com/profile_images/29830/_DSC7589-Editar__scaled_.jpg?version=1776291515",
+                  "email":  "adrian@duparcrealty.com"
+              },
+    "features":  [
+                     {
+                         "name":  "Aire acondicionado",
+                         "category":  "General"
+                     },
+                     {
+                         "name":  "Alberca",
+                         "category":  "Recreación"
+                     },
+                     {
+                         "name":  "Balcón",
+                         "category":  "Exterior"
+                     },
+                     {
+                         "name":  "Estacionamiento techado",
+                         "category":  "Exterior"
+                     },
+                     {
+                         "name":  "Seguridad 24 horas",
+                         "category":  "General"
+                     },
+                     {
+                         "name":  "Patio",
+                         "category":  "Exterior"
+                     },
+                     {
+                         "name":  "Cisterna",
+                         "category":  "Exterior"
+                     },
+                     {
+                         "name":  "Cocina integral",
+                         "category":  "General"
+                     },
+                     {
+                         "name":  "Fraccionamiento privado",
+                         "category":  "General"
+                     },
+                     {
+                         "name":  "Área de juegos infantiles",
+                         "category":  "Recreación"
+                     },
+                     {
+                         "name":  "Facilidad para estacionarse",
+                         "category":  "Exterior"
+                     },
+                     {
+                         "name":  "Terraza",
+                         "category":  "Exterior"
+                     },
+                     {
+                         "name":  "Cuarto de servicio",
+                         "category":  "General"
+                     },
+                     {
+                         "name":  "Dos plantas",
+                         "category":  "General"
+                     },
+                     {
+                         "name":  "Estudio",
+                         "category":  "General"
+                     }
+                 ]
+}
